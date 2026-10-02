@@ -22,8 +22,26 @@ test("booking request endpoint gives a safe preview without Supabase", async ({ 
   expect((await response.json()).mode).toBe("preview");
 });
 
+test("Hotelbeds confirmation endpoints stay safe before certification", async ({ request }) => {
+  const checkRate = await request.post("/api/hotelbeds/checkrate", { data: { rateKeys: ["qa-rate-key"] } });
+  expect([400, 503]).toContain(checkRate.status());
+  expect((await checkRate.json()).ok).toBe(false);
+
+  const booking = await request.post("/api/hotelbeds/booking", {
+    data: {
+      confirm: true,
+      internalReference: "MD-QA-PREVIEW",
+      rateKey: "qa-rate-key",
+      holder: { name: "QA", surname: "Traveller" },
+      paxes: [{ name: "QA", surname: "Traveller" }],
+    },
+  });
+  expect([409, 503]).toContain(booking.status());
+  expect((await booking.json()).ok).toBe(false);
+});
+
 test("dynamic content routes render", async ({ page }) => {
-  for (const route of ["/stay/overwater-romance", "/resorts/private-island-luxury", "/guesthouses/coral-garden-house", "/experiences/dive-with-manta-rays", "/booking/MD-PREVIEW", "/checkout"]) {
+  for (const route of ["/stay/overwater-romance", "/resorts/private-island-luxury", "/guesthouses/coral-garden-house", "/experiences/dive-with-manta-rays", "/booking/MD-PREVIEW", "/booking/MD-PREVIEW/voucher", "/hotelbeds-certification", "/checkout"]) {
     const response = await page.goto(route);
     expect(response?.status(), route).toBe(200);
     await expect(page.locator("main")).toBeVisible();

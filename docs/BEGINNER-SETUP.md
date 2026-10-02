@@ -16,7 +16,8 @@ Open `http://localhost:3000`.
 1. Create a Supabase project.
 2. Run `supabase/migrations/0001_foundation.sql` in Supabase SQL Editor.
 3. Run `supabase/migrations/0002_booking_and_leads.sql`.
-4. Put the project URL, anon key and service-role key in `.env.local`.
+4. Run `supabase/migrations/0003_hotelbeds_workflow.sql`.
+5. Put the project URL, anon key and service-role key in `.env.local`.
 
 Never put `SUPABASE_SERVICE_ROLE_KEY` in a `NEXT_PUBLIC_*` variable or browser code.
 
@@ -31,7 +32,7 @@ HOTELBEDS_MALDIVES_HOTEL_CODES=12345,67890
 
 3. Keep `HOTELBEDS_ENVIRONMENT=test` while testing.
 
-The adapter passes live availability into the request flow. Full Hotelbeds CheckRate/Confirm booking still needs the supplier rate key and certification workflow.
+The adapter passes live availability into the request flow. CheckRate and booking endpoints are implemented, but confirmation is intentionally disabled by default. Hotelbeds requires mTLS for these booking operations. Add the certificate, key and CA as base64 environment variables only after Hotelbeds supplies them, then use `HOTELBEDS_BOOKING_MODE=test` for approved sandbox certification testing. Keep `disabled` until then.
 
 ## 4. Viator
 

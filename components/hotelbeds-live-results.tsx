@@ -1,17 +1,8 @@
 import Link from "next/link";
-import { Price } from "@/components/price";
+import { SupplierPrice } from "@/components/supplier-price";
+import { formatCancellationPolicy, type HotelbedsLiveStay } from "@/lib/hotelbeds-data";
 
-export type HotelbedsLiveStay = {
-  id: string;
-  name: string;
-  location: string;
-  description: string;
-  image: string;
-  rating: number;
-  price: number;
-  currency: string;
-  supplierCode: string;
-};
+export type { HotelbedsLiveStay } from "@/lib/hotelbeds-data";
 
 export function HotelbedsLiveResults({
   stays,
@@ -60,9 +51,11 @@ export function HotelbedsLiveResults({
               <div className="card-source-row"><span className="source-badge source-hotelbeds"><span className="source-dot" />Hotelbeds</span></div>
               <h3>{stay.name}</h3>
               <p>{stay.description}</p>
+              <div className="live-rate-meta"><span>{stay.rate.roomName}</span><span>{stay.rate.boardName}</span></div>
+              <p className="live-rate-policy">{formatCancellationPolicy(stay.rate.cancellationPolicies)}</p>
               <div className="stay-footer">
-                <Link href={`/booking?type=stay&supplier=hotelbeds&hotel=${encodeURIComponent(stay.supplierCode)}&price=${encodeURIComponent(stay.price)}&currency=${encodeURIComponent(stay.currency)}&title=${encodeURIComponent(stay.name)}&location=${encodeURIComponent(stay.location)}&checkIn=${encodeURIComponent(checkIn)}&checkOut=${encodeURIComponent(checkOut)}`}>Continue</Link>
-                <span>From <Price usd={stay.price} /></span>
+                <Link href={`/booking?type=stay&supplier=hotelbeds&hotel=${encodeURIComponent(stay.supplierCode)}&rateKey=${encodeURIComponent(stay.rate.rateKey)}&rateType=${encodeURIComponent(stay.rate.rateType)}&price=${encodeURIComponent(stay.price)}&currency=${encodeURIComponent(stay.currency)}&title=${encodeURIComponent(stay.name)}&location=${encodeURIComponent(stay.location)}&roomName=${encodeURIComponent(stay.rate.roomName)}&boardName=${encodeURIComponent(stay.rate.boardName)}&checkIn=${encodeURIComponent(checkIn)}&checkOut=${encodeURIComponent(checkOut)}`}>Review rate</Link>
+                <span>From <SupplierPrice amount={stay.price} currency={stay.currency} /></span>
               </div>
             </div>
           </article>

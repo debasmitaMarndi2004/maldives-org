@@ -21,7 +21,7 @@ export async function POST(request: Request) {
 
     const result = await supabase
       .from("booking_requests")
-      .select("offer_title, price_from_usd, currency, status")
+      .select("offer_title, price_amount, price_currency, price_from_usd, currency, status")
       .eq("reference", reference)
       .maybeSingle();
     if (result.error || !result.data) {
@@ -31,9 +31,10 @@ export async function POST(request: Request) {
       return Response.json({ ok: false, message: "Payment is available after the supplier confirms this booking." }, { status: 409 });
     }
 
-    const amount = typeof result.data.price_from_usd === "number" ? Math.round(result.data.price_from_usd * 100) : 0;
+    const confirmedAmount = typeof result.data.price_amount === "number" ? result.data.price_amount : result.data.price_from_usd;
+    const amount = typeof confirmedAmount === "number" ? Math.round(confirmedAmount * 100) : 0;
     const title = result.data.offer_title.slice(0, 160);
-    const currency = (result.data.currency || process.env.STRIPE_CURRENCY || "usd").toLowerCase();
+    const currency = (result.data.price_currency || result.data.currency || process.env.STRIPE_CURRENCY || "usd").toLowerCase();
     if (amount < 50 || !/^[a-z]{3}$/.test(currency)) {
       return Response.json({ ok: false, message: "The confirmed booking amount is not ready for payment." }, { status: 409 });
     }

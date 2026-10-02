@@ -69,6 +69,8 @@ export async function POST(request: Request) {
       notes: text(body.notes, 1500) || null,
       price_from_usd: priceFrom,
       currency,
+      price_amount: priceFrom,
+      price_currency: currency,
       status: "new",
     };
 

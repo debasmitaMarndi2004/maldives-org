@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { Agent } from "undici";
 
 export type HotelbedsProduct = "hotel" | "activities" | "transfers";
 
@@ -13,6 +14,8 @@ type HotelbedsResponse<T> = {
   response: Response;
   data: T | null;
 };
+
+let mutualTlsAgent: Agent | null = null;
 
 export type HotelbedsSearchInput = {
   checkIn: string;
@@ -77,6 +80,37 @@ export function createHotelbedsSignature(
     .digest("hex");
 }
 
+function decodeCertificate(value: string | undefined) {
+  if (!value) return undefined;
+  if (value.includes("BEGIN")) return value;
+  try {
+    return Buffer.from(value, "base64").toString("utf8");
+  } catch {
+    return value;
+  }
+}
+
+export function isHotelbedsMutualTlsConfigured() {
+  return Boolean(
+    process.env.HOTELBEDS_MTLS_CERT_BASE64 &&
+      process.env.HOTELBEDS_MTLS_KEY_BASE64,
+  );
+}
+
+function getMutualTlsAgent() {
+  if (!isHotelbedsMutualTlsConfigured()) return undefined;
+  if (!mutualTlsAgent) {
+    mutualTlsAgent = new Agent({
+      connect: {
+        cert: decodeCertificate(process.env.HOTELBEDS_MTLS_CERT_BASE64),
+        key: decodeCertificate(process.env.HOTELBEDS_MTLS_KEY_BASE64),
+        ca: decodeCertificate(process.env.HOTELBEDS_MTLS_CA_BASE64),
+      },
+    });
+  }
+  return mutualTlsAgent;
+}
+
 export async function hotelbedsRequest<T>(
   path: string,
   init: RequestInit = {},
@@ -104,7 +138,8 @@ export async function hotelbedsRequest<T>(
       headers,
       signal: controller.signal,
       cache: "no-store",
-    });
+      dispatcher: getMutualTlsAgent(),
+    } as RequestInit & { dispatcher?: Agent });
   } finally {
     clearTimeout(timeout);
   }
@@ -150,6 +185,39 @@ export async function searchHotelAvailability(input: HotelbedsSearchInput) {
           hotel: input.hotelCodes,
         },
       }),
+    },
+    "hotel",
+  );
+}
+
+export async function checkHotelRate(rateKeys: string[]) {
+  return hotelbedsRequest<unknown>(
+    "/hotel-api/1.0/checkrates",
+    {
+      method: "POST",
+      body: JSON.stringify({ rooms: rateKeys.map((rateKey) => ({ rateKey })) }),
+    },
+    "hotel",
+  );
+}
+
+export type HotelbedsBookingInput = {
+  holder: { name: string; surname: string };
+  rooms: Array<{
+    rateKey: string;
+    paxes: Array<{ roomId: number; type: "AD" | "CH"; name: string; surname: string; age?: number }>;
+  }>;
+  clientReference: string;
+  remark?: string;
+  tolerance?: number;
+};
+
+export async function confirmHotelBooking(input: HotelbedsBookingInput) {
+  return hotelbedsRequest<unknown>(
+    "/hotel-api/1.0/bookings",
+    {
+      method: "POST",
+      body: JSON.stringify(input),
     },
     "hotel",
   );

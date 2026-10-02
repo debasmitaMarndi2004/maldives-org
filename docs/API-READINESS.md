@@ -23,6 +23,8 @@ The current product is deliberately usable before supplier credentials are added
 - Server-side booking request, contact enquiry and newsletter endpoints with preview fallback when Supabase is not configured.
 - Stripe Checkout and webhook endpoints that remain disabled until secret keys and a confirmed booking amount are available.
 - Viator product details adapter at `/api/viator/products/[code]` using the Partner API authentication contract.
+- Hotelbeds workflow endpoints at `/api/hotelbeds/checkrate` and `/api/hotelbeds/booking`, with mTLS and booking-mode safety guards.
+- Hotelbeds rate cards now carry room, board, cancellation and supplier-currency details into a dedicated booking flow and voucher route.
 
 ## Recommended implementation order after credentials
 
@@ -30,8 +32,9 @@ The current product is deliberately usable before supplier credentials are added
 2. Add server-side signature handling and short-lived caching. Never expose supplier secrets to the browser.
 3. Expand the live stay result adapter into the existing directory filters and booking offer contract.
 4. Add date-aware availability checks and a final-price review before any payment or affiliate redirect.
-5. Add booking webhooks/reconciliation and store only the minimum booking reference needed in Supabase.
-6. Update the disclosure, cancellation, tax and support copy with the client's legal entity and signed supplier terms.
+5. Run the Hotelbeds CheckRate → Booking certification flow after mTLS credentials and approval are supplied.
+6. Add booking webhooks/reconciliation and store only the minimum booking reference needed in Supabase.
+7. Update the disclosure, cancellation, tax and support copy with the client's legal entity and signed supplier terms.
 
 For beginner setup instructions, see [BEGINNER-SETUP.md](BEGINNER-SETUP.md).
 

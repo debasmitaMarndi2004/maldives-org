@@ -23,6 +23,11 @@ export type TravelOffer = {
   priceUnit: string;
   availability: AvailabilityState;
   cancellation: CancellationPolicy;
+  supplierRateKey?: string;
+  supplierRateType?: string;
+  roomName?: string;
+  boardName?: string;
+  cancellationDetails?: string;
   lastChecked?: string;
   deepLink?: string;
 };
