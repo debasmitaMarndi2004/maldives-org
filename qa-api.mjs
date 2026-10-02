@@ -24,9 +24,10 @@ await page.getByLabel('Check in').fill('2027-02-10');
 await page.getByLabel('Check out').fill('2027-02-15');
 await page.getByRole('checkbox').check();
 await page.getByRole('button', { name: /Continue with this request/ }).click();
-const submitted = await page.getByText('Your island plan is taking shape.').isVisible();
-await Promise.all([page.waitForURL(/\/booking\/confirmation/), page.getByRole('link', { name: /See next steps/ }).click()]);
-const confirmation = await page.getByText('Clear steps, no surprises.').isVisible();
+await page.getByRole('heading', { name: 'Your island plan is taking shape.' }).waitFor({ state: 'visible' });
+const submitted = await page.getByRole('heading', { name: 'Your island plan is taking shape.' }).isVisible();
+await Promise.all([page.waitForURL(/\/booking\/MD-/), page.getByRole('link', { name: /See booking status/ }).click()]);
+const confirmation = await page.getByRole('heading', { name: 'Your reference is being prepared.' }).isVisible();
 
 const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1 });
 await mobile.goto('http://localhost:3000/booking?type=experience&slug=dive-with-manta-rays', { waitUntil: 'networkidle' });

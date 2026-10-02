@@ -20,6 +20,9 @@ The current product is deliberately usable before supplier credentials are added
 - Stay sorting, source labelling and booking-flow entry points from stay and experience detail pages.
 - Server-only Hotelbeds signature, status and availability adapters under `lib/hotelbeds.ts` and `/api/hotelbeds/*`.
 - Environment placeholders for Hotelbeds and Viator without storing credentials in the repository.
+- Server-side booking request, contact enquiry and newsletter endpoints with preview fallback when Supabase is not configured.
+- Stripe Checkout and webhook endpoints that remain disabled until secret keys and a confirmed booking amount are available.
+- Viator product details adapter at `/api/viator/products/[code]` using the Partner API authentication contract.
 
 ## Recommended implementation order after credentials
 
@@ -29,6 +32,8 @@ The current product is deliberately usable before supplier credentials are added
 4. Add date-aware availability checks and a final-price review before any payment or affiliate redirect.
 5. Add booking webhooks/reconciliation and store only the minimum booking reference needed in Supabase.
 6. Update the disclosure, cancellation, tax and support copy with the client's legal entity and signed supplier terms.
+
+For beginner setup instructions, see [BEGINNER-SETUP.md](BEGINNER-SETUP.md).
 
 ## Important launch rule
 

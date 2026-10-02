@@ -23,11 +23,13 @@ export async function POST(request: Request) {
     const adults = toInteger(body.adults, 2);
     const children = toInteger(body.children, 0);
     const rooms = toInteger(body.rooms, 1);
+    const allowedCodes = getConfiguredHotelCodes();
     const requestedCodes = Array.isArray(body.hotelCodes)
       ? body.hotelCodes.map(Number)
-      : getConfiguredHotelCodes();
+      : allowedCodes;
+    const allowed = new Set(allowedCodes);
     const hotelCodes = requestedCodes.filter(
-      (value) => Number.isInteger(value) && value > 0,
+      (value) => Number.isInteger(value) && value > 0 && allowed.has(value),
     );
 
     if (

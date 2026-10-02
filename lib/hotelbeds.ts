@@ -95,11 +95,19 @@ export async function hotelbedsRequest<T>(
     headers.set("Content-Type", "application/json");
   }
 
-  const response = await fetch(`${config.baseUrl}${path}`, {
-    ...init,
-    headers,
-    cache: "no-store",
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 20_000);
+  let response: Response;
+  try {
+    response = await fetch(`${config.baseUrl}${path}`, {
+      ...init,
+      headers,
+      signal: controller.signal,
+      cache: "no-store",
+    });
+  } finally {
+    clearTimeout(timeout);
+  }
   const rawBody = await response.text();
 
   let data: T | null = null;

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { ArrowRight, ArrowUpRight, HeartIcon, SearchIcon, StarIcon, SunIcon } from "@/components/icons";
 import { atolls, experiences, images, properties } from "@/lib/data";
 import { Price } from "@/components/price";
+import { NewsletterFormLive } from "@/components/newsletter-form-live";
 
 function SearchCard() {
   const router = useRouter();
@@ -69,8 +70,6 @@ function ChatWidget() {
 }
 
 export default function HomeSections() {
-  const [email, setEmail] = useState("");
-  const [subscribed, setSubscribed] = useState(false);
   const featured = useMemo(() => properties.slice(0, 3), []);
   return <main className="site-main">
     <section className="hero" data-reveal><div className="hero-image" aria-hidden="true" /><div className="page-wrap hero-content"><div className="hero-copy"><span className="eyebrow">The islands you&apos;ve been dreaming about</span><h1>Find your perfect Maldives.</h1><p>Explore extraordinary resorts, overwater villas, private islands and unforgettable experiences, then compare and book the trip in one place.</p><div className="hero-actions"><Link className="button button-sun" href="/stay">Explore Resorts <ArrowUpRight size={14} /></Link><Link className="button button-ghost" href="/experiences">Discover Experiences <ArrowUpRight size={14} /></Link></div></div></div></section>
@@ -80,7 +79,7 @@ export default function HomeSections() {
     <section className="section section-soft" data-reveal><div className="page-wrap"><div className="section-header"><div><span className="eyebrow">Featured stays</span><h2>Resorts worth the flight.</h2></div><p>Curated places travellers love. These cards can eventually connect directly to affiliate partners.</p></div><div className="featured-grid">{featured.map((property) => <StayCard property={property} key={property.slug} />)}</div><div className="section-cta"><Link href="/stay" className="text-link">See all stays <ArrowRight size={14} /></Link></div></div></section>
     <section className="section page-wrap" data-reveal><div className="section-header"><div><span className="eyebrow">Beyond the villa</span><h2>Do something unforgettable.</h2></div><p>Trade a slow morning for a reef adventure, a sunset sail or a sandbank that feels like it belongs only to you.</p></div><div className="experience-grid">{experiences.map((experience) => <Link href={`/experiences/${experience.slug}`} className="experience-tile" style={{ "--tile-image": `url(${experience.image})` } as React.CSSProperties} key={experience.slug}><div><h3>{experience.name}</h3><p>{experience.duration} · From <Price usd={experience.price} /></p></div></Link>)}</div></section>
     <section className="guide-band" data-reveal><div className="page-wrap"><div className="section-header"><div><span className="eyebrow">Travel well</span><h2>Your Maldives guide.</h2></div><p>Good trips are made of small decisions. Start with the practical things that make island time feel effortless.</p></div><div className="guide-grid"><Link className="guide-card" href="/guides/best-time-to-visit"><h3>Best time to visit</h3><p>Weather, reef life and the seasons worth planning around.</p><span className="guide-link">Read the guide <ArrowUpRight size={13} /></span></Link><Link className="guide-card" href="/transfers"><h3>Getting around</h3><p>Seaplanes, speedboats and ferries — know what connects.</p><span className="guide-link">Plan your route <ArrowUpRight size={13} /></span></Link><Link className="guide-card" href="/atolls"><h3>Which atoll?</h3><p>Choose the right kind of island for your way of travelling.</p><span className="guide-link">Find your fit <ArrowUpRight size={13} /></span></Link></div></div></section>
-    <section className="newsletter" id="newsletter" data-reveal><div className="page-wrap"><span className="eyebrow">Island notes</span><h2>Paradise in your inbox.</h2><p>Thoughtful guides, new stays and the occasional nudge to book the trip you keep talking about.</p>{subscribed ? <div className="success-note">You’re on the list — see you in paradise.</div> : <form className="newsletter-form" onSubmit={(event) => { event.preventDefault(); if (email.includes("@")) setSubscribed(true); }}><input value={email} onChange={(event) => setEmail(event.target.value)} type="email" placeholder="Your email address" aria-label="Email address" required /><button type="submit">Sign me up</button></form>}<div className="form-note">No noise. Unsubscribe any time.</div></div></section>
+    <section className="newsletter" id="newsletter" data-reveal><div className="page-wrap"><span className="eyebrow">Island notes</span><h2>Paradise in your inbox.</h2><p>Thoughtful guides, new stays and the occasional nudge to book the trip you keep talking about.</p><NewsletterFormLive /><div className="form-note">No noise. Unsubscribe any time.</div></div></section>
     <ChatWidget />
   </main>;
 }

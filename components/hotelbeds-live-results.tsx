@@ -61,7 +61,7 @@ export function HotelbedsLiveResults({
               <h3>{stay.name}</h3>
               <p>{stay.description}</p>
               <div className="stay-footer">
-                <Link href={`/booking?type=stay&supplier=hotelbeds&hotel=${stay.supplierCode}`}>Continue</Link>
+                <Link href={`/booking?type=stay&supplier=hotelbeds&hotel=${encodeURIComponent(stay.supplierCode)}&price=${encodeURIComponent(stay.price)}&currency=${encodeURIComponent(stay.currency)}&title=${encodeURIComponent(stay.name)}&location=${encodeURIComponent(stay.location)}&checkIn=${encodeURIComponent(checkIn)}&checkOut=${encodeURIComponent(checkOut)}`}>Continue</Link>
                 <span>From <Price usd={stay.price} /></span>
               </div>
             </div>

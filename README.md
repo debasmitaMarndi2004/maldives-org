@@ -19,6 +19,9 @@ Open `http://localhost:3000`. The site uses clearly labelled sample inventory an
 - Account, partner and admin workspace shells with responsive operational UI.
 - Local wishlist interactions, search/filter state, map/list toggle, trip-builder steps, newsletter success state, concierge demo panel and route-query submission.
 - API-ready booking foundation: normalized supplier contract, source/availability labels, booking-request flow, confirmation state, “How it works” page and affiliate disclosure template.
+- Backend-ready request APIs for bookings, contact enquiries and newsletter subscriptions, plus Supabase persistence when configured.
+- Stripe Checkout and webhook endpoints are wired but remain disabled until keys and business/tax decisions are provided.
+- Viator product adapter, checkout/reference routes and reproducible Playwright/CI smoke tests.
 - Supabase foundation migration, RLS starting policies, sample seed and `.env.example` for the production integration described in the PRD.
 
 ## Supplier integration plan
@@ -27,4 +30,4 @@ The integration layer now targets Hotelbeds for hotel search and availability, V
 
 ## Before launch
 
-Replace all sample listings and remote images with licensed/partner-confirmed content. Connect Supabase, implement server-side pricing and inventory, add Stripe/Resend/Anthropic credentials, verify Maldives tax rules with the business/accountant, and complete the PRD launch checklist.
+Replace all sample listings and remote images with licensed/partner-confirmed content. Follow [docs/BEGINNER-SETUP.md](docs/BEGINNER-SETUP.md), connect Supabase, complete Hotelbeds/Viator supplier certification, add Resend credentials, activate Stripe only after business/tax review, and complete the PRD launch checklist.
