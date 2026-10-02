@@ -22,6 +22,7 @@ Open `http://localhost:3000`. The site uses clearly labelled sample inventory an
 - Backend-ready request APIs for bookings, contact enquiries and newsletter subscriptions, plus Supabase persistence when configured.
 - Stripe Checkout and webhook endpoints are wired but remain disabled until keys and business/tax decisions are provided.
 - Viator product adapter, checkout/reference routes and reproducible Playwright/CI smoke tests.
+- Runtime hardening: security response headers, bounded external API calls, resilient email delivery and a route-wide browser audit that avoids writing test data.
 - Supabase foundation migration, RLS starting policies, sample seed and `.env.example` for the production integration described in the PRD.
 
 ## Supplier integration plan

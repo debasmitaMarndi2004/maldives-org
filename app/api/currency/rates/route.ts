@@ -3,9 +3,12 @@ import { fallbackRates, supportedCurrencies, type Currency } from "@/lib/currenc
 export const revalidate = 3600;
 
 export async function GET() {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8_000);
   try {
     const response = await fetch("https://open.er-api.com/v6/latest/USD", {
       next: { revalidate },
+      signal: controller.signal,
     });
     const payload = (await response.json()) as { result?: string; rates?: Record<string, number>; time_last_update_utc?: string };
 
@@ -32,5 +35,7 @@ export async function GET() {
       source: "fallback",
       updatedAt: null,
     });
+  } finally {
+    clearTimeout(timeout);
   }
 }

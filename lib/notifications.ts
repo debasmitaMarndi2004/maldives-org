@@ -5,17 +5,26 @@ export async function sendTransactionalEmail(input: EmailInput) {
   const from = process.env.RESEND_FROM_EMAIL;
   if (!apiKey || !from) return { sent: false, configured: false };
 
-  const response = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ from, ...input }),
-    cache: "no-store",
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10_000);
+  try {
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ from, ...input }),
+      cache: "no-store",
+      signal: controller.signal,
+    });
 
-  return { sent: response.ok, configured: true };
+    return { sent: response.ok, configured: true };
+  } catch {
+    return { sent: false, configured: true };
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 export function escapeHtml(value: string) {

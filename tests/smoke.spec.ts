@@ -15,11 +15,18 @@ test("homepage search and currency controls work", async ({ page }) => {
   expect(errors).toEqual([]);
 });
 
-test("booking request endpoint gives a safe preview without Supabase", async ({ request }) => {
-  const response = await request.post("/api/booking-requests", { data: { travelerName: "QA Traveller", travelerEmail: "qa@example.com", offerTitle: "Test Maldives stay", offerType: "stay", guests: 2 } });
-  expect(response.status()).toBe(202);
-  await expect(response).toBeOK();
-  expect((await response.json()).mode).toBe("preview");
+test("security headers are present", async ({ request }) => {
+  const response = await request.get("/");
+  expect(response.status()).toBe(200);
+  expect(response.headers()["x-content-type-options"]).toBe("nosniff");
+  expect(response.headers()["x-frame-options"]).toBe("DENY");
+  expect(response.headers()["referrer-policy"]).toBe("strict-origin-when-cross-origin");
+});
+
+test("booking request endpoint rejects invalid input without writing data", async ({ request }) => {
+  const response = await request.post("/api/booking-requests", { data: { travelerName: "QA Traveller", travelerEmail: "not-an-email", offerTitle: "Test Maldives stay", offerType: "stay", guests: 2 } });
+  expect(response.status()).toBe(400);
+  expect((await response.json()).ok).toBe(false);
 });
 
 test("Hotelbeds confirmation endpoints stay safe before certification", async ({ request }) => {
