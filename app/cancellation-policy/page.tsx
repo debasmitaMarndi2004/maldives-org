@@ -1,0 +1,2 @@
+import { ContentPage } from "@/components/public-pages";
+export default function CancellationPage() { return <ContentPage eyebrow="LEGAL · FOR REVIEW" title="Cancellation, made clear." description="A professional template for legal review before public launch."><div className="detail-card"><h2>Every stay is different</h2><p>Cancellation windows, deposits and transfer rules will be shown before any booking is confirmed. The production pricing engine will read policy data from the listing, not from hardcoded assumptions.</p></div></ContentPage>; }

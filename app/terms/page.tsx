@@ -1,0 +1,2 @@
+import { ContentPage } from "@/components/public-pages";
+export default function TermsPage() { return <ContentPage eyebrow="LEGAL · FOR REVIEW" title="Terms of use." description="A professional template for legal review before public launch."><div className="detail-card"><h2>Using Maldives.org</h2><p>This template covers the use of the public directory, sample content, partner content and future booking flows. Final terms should reflect the legal entity, governing law, partner agreements and consumer protections that apply at launch.</p></div></ContentPage>; }

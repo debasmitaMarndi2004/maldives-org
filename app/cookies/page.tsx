@@ -1,0 +1,2 @@
+import { ContentPage } from "@/components/public-pages";
+export default function CookiesPage() { return <ContentPage eyebrow="LEGAL · FOR REVIEW" title="Cookies and similar tools." description="A professional template for legal review before public launch."><div className="detail-card"><h2>How cookies help</h2><p>Essential cookies keep the site working. Optional analytics and preference cookies should only activate after the visitor has made a clear choice.</p></div></ContentPage>; }

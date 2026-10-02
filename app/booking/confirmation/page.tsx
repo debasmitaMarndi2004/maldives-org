@@ -1,0 +1,6 @@
+import Link from "next/link";
+import { ArrowRight, CheckIcon } from "@/components/icons";
+
+export default function BookingConfirmationPage() {
+  return <main className="page-main booking-main"><div className="page-wrap booking-confirmation" data-reveal><div className="success-icon"><CheckIcon size={24} /></div><span className="eyebrow">WHAT HAPPENS NEXT</span><h1>Clear steps, no surprises.</h1><p>When Hotelbeds, Viator or a direct local partner is connected, this request becomes the hand-off point for live availability, final pricing and secure checkout.</p><div className="next-steps"><div><strong>01</strong><div><h3>We verify the selection</h3><p>Dates, capacity, transfer timing and cancellation terms are checked against the supplier.</p></div></div><div><strong>02</strong><div><h3>You see the final total</h3><p>Taxes, partner fees and any affiliate hand-off are explained before you commit.</p></div></div><div><strong>03</strong><div><h3>You book with confidence</h3><p>The customer is sent to the right secure booking surface or receives a direct partner confirmation.</p></div></div></div><div className="booking-actions"><Link className="button button-teal" href="/plan-your-trip">Plan another trip <ArrowRight size={14} /></Link><Link className="button button-ghost button-dark" href="/" >Return home</Link></div></div></main>;
+}

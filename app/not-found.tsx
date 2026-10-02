@@ -1,0 +1,2 @@
+import Link from "next/link";
+export default function NotFound() { return <main className="page-main"><div className="page-wrap empty-state"><span className="eyebrow">404 · ISLAND NOT FOUND</span><h1 style={{ margin: "13px 0", fontSize: 48, letterSpacing: "-.06em" }}>This island drifted off the map.</h1><p>Try the stay directory or head back to the lagoon.</p><Link className="button button-teal" href="/">Back to home ↗</Link></div></main>; }
