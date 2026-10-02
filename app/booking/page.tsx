@@ -2,9 +2,10 @@ import { BookingFlow } from "@/components/booking-flow";
 import { experiences, properties } from "@/lib/data";
 import type { TravelOffer } from "@/lib/api-contracts";
 
-export default function BookingPage({ searchParams }: { searchParams: { type?: string; slug?: string } }) {
-  const experience = searchParams.type === "experience" ? experiences.find((item) => item.slug === searchParams.slug) : undefined;
-  const property = !experience ? properties.find((item) => item.slug === searchParams.slug) : undefined;
+export default async function BookingPage({ searchParams }: { searchParams: Promise<{ type?: string; slug?: string }> }) {
+  const params = await searchParams;
+  const experience = params.type === "experience" ? experiences.find((item) => item.slug === params.slug) : undefined;
+  const property = !experience ? properties.find((item) => item.slug === params.slug) : undefined;
   const offer: TravelOffer = experience ? {
     id: experience.slug,
     type: "experience",

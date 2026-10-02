@@ -23,9 +23,14 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (isCurrency(stored)) setCurrencyState(stored);
 
     let cancelled = false;
+    if (isCurrency(stored)) {
+      window.setTimeout(() => {
+        if (!cancelled) setCurrencyState(stored);
+      }, 0);
+    }
+
     fetch("/api/currency/rates", { cache: "no-store" })
       .then(async (response) => {
         if (!response.ok) throw new Error("Currency rates unavailable");

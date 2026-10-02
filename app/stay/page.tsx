@@ -81,9 +81,9 @@ function normalizeHotelbedsResults(data: unknown): HotelbedsLiveStay[] {
 export default async function StayPage({
   searchParams,
 }: {
-  searchParams?: SearchParams;
+  searchParams?: Promise<SearchParams>;
 }) {
-  const params = searchParams ?? {};
+  const params = searchParams ? await searchParams : {};
   const checkIn = firstParam(params.checkIn);
   const checkOut = firstParam(params.checkOut);
   const codes = getConfiguredHotelCodes();
@@ -97,6 +97,8 @@ export default async function StayPage({
     return <StayDirectory />;
   }
 
+  let liveStays: HotelbedsLiveStay[] = [];
+
   try {
     const response = await searchHotelAvailability({
       checkIn,
@@ -106,13 +108,13 @@ export default async function StayPage({
       rooms: 1,
       hotelCodes: codes,
     });
-    const stays = response.response.ok ? normalizeHotelbedsResults(response.data) : [];
-
-    if (stays.length > 0) {
-      return <HotelbedsLiveResults stays={stays} checkIn={checkIn} checkOut={checkOut} />;
-    }
+    liveStays = response.response.ok ? normalizeHotelbedsResults(response.data) : [];
   } catch {
     // Keep the directory available if the external supplier is unavailable.
+  }
+
+  if (liveStays.length > 0) {
+    return <HotelbedsLiveResults stays={liveStays} checkIn={checkIn} checkOut={checkOut} />;
   }
 
   return <StayDirectory />;
