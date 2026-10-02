@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Price } from "@/components/price";
 
 export type HotelbedsLiveStay = {
   id: string;
@@ -61,7 +62,7 @@ export function HotelbedsLiveResults({
               <p>{stay.description}</p>
               <div className="stay-footer">
                 <Link href={`/booking?type=stay&supplier=hotelbeds&hotel=${stay.supplierCode}`}>Continue</Link>
-                <span>From {stay.currency} {stay.price.toLocaleString()}</span>
+                <span>From <Price usd={stay.price} /></span>
               </div>
             </div>
           </article>

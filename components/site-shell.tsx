@@ -5,11 +5,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { navItems } from "@/lib/data";
 import { ChevronDown, CloseIcon, MenuIcon } from "@/components/icons";
+import { supportedCurrencies } from "@/lib/currency";
+import { useCurrency } from "@/components/currency-provider";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const { currency, setCurrency, isLoading } = useCurrency();
   const lightNav = pathname !== "/" && !pathname.startsWith("/partner") && !pathname.startsWith("/admin");
 
   useEffect(() => {
@@ -27,12 +30,12 @@ export function Navbar() {
           {navItems.map((item) => <Link key={item.href} href={item.href}>{item.label}</Link>)}
         </nav>
         <div className="nav-actions">
-          <label className="currency-select"><span className="sr-only">Currency</span><select defaultValue="USD" aria-label="Currency"><option>USD</option><option>EUR</option><option>GBP</option><option>INR</option><option>AED</option><option>MVR</option></select><ChevronDown size={14} /></label>
+          <label className="currency-select"><span className="sr-only">Currency</span><select value={currency} onChange={(event) => setCurrency(event.target.value as typeof currency)} aria-label="Currency" aria-busy={isLoading}>{supportedCurrencies.map((option) => <option key={option}>{option}</option>)}</select><ChevronDown size={14} /></label>
           <Link href="/plan-your-trip" className="nav-cta">Plan Your Trip</Link>
         </div>
         <button className="mobile-menu-btn" type="button" onClick={() => setOpen(!open)} aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open}>{open ? <CloseIcon /> : <MenuIcon />}</button>
       </div>
-      {open && <div className="mobile-drawer"><nav aria-label="Mobile navigation">{navItems.map((item) => <Link key={item.href} href={item.href} onClick={() => setOpen(false)}>{item.label}<span>↗</span></Link>)}<Link className="drawer-cta" href="/plan-your-trip" onClick={() => setOpen(false)}>Plan Your Trip <span>↗</span></Link></nav></div>}
+      {open && <div className="mobile-drawer"><div className="mobile-currency"><span>Display currency</span><label className="currency-select"><span className="sr-only">Currency</span><select value={currency} onChange={(event) => setCurrency(event.target.value as typeof currency)} aria-label="Mobile currency">{supportedCurrencies.map((option) => <option key={option}>{option}</option>)}</select><ChevronDown size={14} /></label></div><nav aria-label="Mobile navigation">{navItems.map((item) => <Link key={item.href} href={item.href} onClick={() => setOpen(false)}>{item.label}<span>↗</span></Link>)}<Link className="drawer-cta" href="/plan-your-trip" onClick={() => setOpen(false)}>Plan Your Trip <span>↗</span></Link></nav></div>}
     </header>
   );
 }
