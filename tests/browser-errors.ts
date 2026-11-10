@@ -10,7 +10,7 @@ export function captureApplicationErrors(page: Page) {
     if (message.type() !== "error") return;
     const source = message.location().url;
     const isRemoteImage = source.startsWith("https://images.unsplash.com/");
-    const isNetworkFailure = /Failed to load resource: net::ERR_(?:TUNNEL_CONNECTION_FAILED|FAILED|CONNECTION_CLOSED|CONNECTION_RESET)/.test(message.text());
+    const isNetworkFailure = /Failed to load resource: net::ERR_(?:TUNNEL_CONNECTION_FAILED|FAILED|CONNECTION_CLOSED|CONNECTION_RESET|CERT_AUTHORITY_INVALID)/.test(message.text());
     if (isRemoteImage && isNetworkFailure) unavailableMedia.push(source);
     else if (source.startsWith("https://tpscr.com/content?") && isNetworkFailure) unavailablePartnerScripts.push(source);
     else errors.push(`${message.text()} (${source})`);
