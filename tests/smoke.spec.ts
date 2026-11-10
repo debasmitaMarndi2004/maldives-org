@@ -1,25 +1,20 @@
 import { expect, test } from "@playwright/test";
 import { captureApplicationErrors } from "./browser-errors";
 
-test("homepage live strip and currency controls work", async ({ page }, testInfo) => {
+test("homepage discovery and menu currency controls work", async ({ page }) => {
   const { errors, unavailableMedia } = captureApplicationErrors(page);
   await page.goto("/");
   await expect(page.locator('iframe[title="Travelpayouts flight search"]')).toHaveCount(0);
-  await expect(page.getByRole("heading", { name: "Find your perfect Maldives." })).toBeVisible();
-  if (testInfo.project.name === "mobile") {
-    await page.getByRole("button", { name: "Open menu" }).click();
-    await page.getByLabel("Mobile currency", { exact: true }).selectOption("INR");
-    await page.getByRole("button", { name: "Close menu" }).click();
-  } else {
-    await page.getByLabel("Currency", { exact: true }).selectOption("INR");
-  }
-  await expect(page.locator(".stay-footer").first()).toContainText("₹");
-  await expect(page.locator(".live-bar")).toBeVisible();
-  await expect(page.locator(".live-bar")).toContainText("Maldives now");
-  await expect(page.locator(".live-bar")).toContainText("Sample weather");
+  await expect(page.getByRole("heading", { name: "Find your perfect Maldives getaway." })).toBeVisible();
+  await page.getByRole("button", { name: "Open menu", exact: true }).click();
+  await page.getByLabel("Mobile currency", { exact: true }).selectOption("INR");
+  await expect(page.getByText("Maldives now · Malé", { exact: true })).toBeVisible();
+  await expect(page.getByText(/Sample weather/)).toBeVisible();
+  await page.getByRole("button", { name: "Close menu", exact: true }).click();
+  await expect(page.locator(".experience-tile").first()).toContainText("₹");
   await expect(page.getByRole("button", { name: "Search stays", exact: true })).toHaveCount(0);
   await expect(page.locator(".search-card")).toHaveCount(0);
-  if (unavailableMedia.length) await expect(page.locator('.stay-image[data-media-state="fallback"]').first()).toBeVisible();
+  if (unavailableMedia.length) await expect(page.locator('.experience-tile[data-media-state="fallback"]').first()).toBeVisible();
 
   expect(errors).toEqual([]);
 });

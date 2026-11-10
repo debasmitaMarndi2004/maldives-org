@@ -7,8 +7,14 @@ import { navItems } from "@/lib/data";
 import { ChevronDown, CloseIcon, MenuIcon } from "@/components/icons";
 import { supportedCurrencies } from "@/lib/currency";
 import { useCurrency } from "@/components/currency-provider";
+import { HomeNavbar } from "@/components/home-navbar";
 
 export function Navbar() {
+  const pathname = usePathname();
+  return pathname === "/" ? <HomeNavbar /> : <StandardNavbar />;
+}
+
+function StandardNavbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuPath, setMenuPath] = useState<string | null>(null);
   const menuButton = useRef<HTMLButtonElement>(null);

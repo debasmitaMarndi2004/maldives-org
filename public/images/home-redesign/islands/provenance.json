@@ -1,0 +1,46 @@
+[
+  {
+    "slug": "male",
+    "title": "File:Aerial view of Malé - Maldives - 12 July 2008.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Aerial_view_of_Mal%C3%A9_-_Maldives_-_12_July_2008.jpg",
+    "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/43/Aerial_view_of_Mal%C3%A9_-_Maldives_-_12_July_2008.jpg/960px-Aerial_view_of_Mal%C3%A9_-_Maldives_-_12_July_2008.jpg",
+    "author": "steve_l",
+    "license": "CC BY 2.0",
+    "license_url": "https://creativecommons.org/licenses/by/2.0",
+    "description": "Aerial view of Malé - Maldives",
+    "bytes": 204019
+  },
+  {
+    "slug": "maafushi",
+    "title": "File:Maafushi-Beach-Maldives.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Maafushi-Beach-Maldives.jpg",
+    "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0b/Maafushi-Beach-Maldives.jpg/960px-Maafushi-Beach-Maldives.jpg",
+    "author": "Nicolai Edgar Andersen",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "description": "A photo of the beach outside Kaani Beach Hotel.",
+    "bytes": 137951
+  },
+  {
+    "slug": "hulhumale",
+    "title": "File:Malediven Rückflug Hulhumale 5.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Malediven_R%C3%BCckflug_Hulhumale_5.jpg",
+    "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0b/Malediven_R%C3%BCckflug_Hulhumale_5.jpg/960px-Malediven_R%C3%BCckflug_Hulhumale_5.jpg",
+    "author": "Zairon",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "description": "Hulhumalé, Maldives photographed from a Plane",
+    "bytes": 197111
+  },
+  {
+    "slug": "dhigurah",
+    "title": "File:Dhigurah.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Dhigurah.jpg",
+    "download": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c1/Dhigurah.jpg/960px-Dhigurah.jpg",
+    "author": "Syced",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+    "description": "Dhigurah is the long island in the background, not the barrier in the foreground.",
+    "bytes": 68570
+  }
+]

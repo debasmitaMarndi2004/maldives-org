@@ -12,7 +12,7 @@ for (const width of [360, 390, 412]) {
     await page.getByLabel("Mobile currency", { exact: true }).selectOption("INR");
     await page.keyboard.press("Escape");
     await expect(page.getByRole("navigation", { name: "Mobile navigation" })).not.toBeVisible();
-    await expect(page.locator(".stay-footer").first()).toContainText("₹");
+    await expect(page.locator(".experience-tile").first()).toContainText("₹");
     await page.getByRole("button", { name: "Open menu" }).click();
     await page.getByRole("navigation", { name: "Mobile navigation" }).getByRole("link", { name: "Stay", exact: true }).click();
     await expect(page).toHaveURL(/\/stay$/);
@@ -76,14 +76,14 @@ test("remote image failure preserves the original hero and shows fallback only o
   const { errors } = captureApplicationErrors(page);
   await page.route("https://images.unsplash.com/**", (route) => route.abort("failed"));
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: "Find your perfect Maldives." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Find your perfect Maldives getaway." })).toBeVisible();
   // Next.js may briefly retain an additional hidden streaming segment.
-  const hero = page.locator(".hero-image:visible");
+  const hero = page.locator("[data-home-hero]:visible");
   await expect(hero).toHaveCount(1);
-  await expect(hero).toHaveCSS("background-image", /photo-1514282401047-d79a71a590e8/);
+  await expect(hero).toHaveCSS("background-image", /\/images\/home-redesign\/hero\.webp/);
   await expect(hero).not.toHaveAttribute("data-media-state", /loading|fallback/);
-  await expect(page.locator('.stay-image[data-media-state="fallback"]').first()).toBeVisible();
-  await expect(page.locator('.stay-image[data-media-state="fallback"]').first()).toHaveCSS("background-image", /island-fallback\.svg/);
+  await expect(page.locator('.experience-tile[data-media-state="fallback"]').first()).toBeVisible();
+  await expect(page.locator('.experience-tile[data-media-state="fallback"]').first()).toHaveCSS("background-image", /island-fallback\.svg/);
   expect(errors).toEqual([]);
 });
 

@@ -34,7 +34,7 @@ test("disabled application emits no Drive script, resource hints, or vendor requ
   expect(response?.status()).toBe(200);
   const html = await response!.text();
   expect(html).not.toContain(TRAVELPAYOUTS_DRIVE_SOURCE);
-  await expect(page.getByRole("heading", { name: "Find your perfect Maldives." })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Find your perfect Maldives getaway." })).toBeVisible();
 
   const assertAbsent = async () => {
     await expect(page.locator(`script[id="${TRAVELPAYOUTS_DRIVE_ID}"], script[id="${TRAVELPAYOUTS_DRIVE_ID}-source"]`)).toHaveCount(0);
