@@ -30,7 +30,7 @@ for (const width of [360, 390, 412, 1280]) {
 
 test("discovery actions retain real internal destinations", async ({ page }) => {
   await page.goto("/");
-  for (const [name, href] of [["Search Flights", "/flights"], ["Find Stays", "/stay"], ["Explore Activities", "/experiences"], ["Read travel guide", "/guides"]]) {
+  for (const [name, href] of [["Search Flights", "/flights"], ["Find Stays", "/stay"], ["Explore Activities", "/tours-and-activities"], ["Read travel guide", "/guides"]]) {
     await expect(page.getByRole("link", { name, exact: true })).toHaveAttribute("href", href);
   }
   const islands = page.getByRole("list", { name: "Maldives islands", exact: true });

@@ -11,7 +11,7 @@ import styles from "./home-navbar.module.css";
 
 const menuLinks = [
   { label: "Stay", href: "/stay" },
-  { label: "Experiences", href: "/experiences" },
+  { label: "Experiences", href: "/tours-and-activities" },
   { label: "Travel Guides", href: "/guides" },
   { label: "Islands", href: "/atolls" },
   { label: "Deals", href: "/deals" },
@@ -97,7 +97,7 @@ export function HomeNavbar() {
       <Link className={styles.brand} href="/" aria-label="Maldives.org home">Maldives<span>.org</span></Link>
       <nav className={styles.desktopNav} aria-label="Primary navigation">
         <button type="button" onClick={e => toggle("explore", e.currentTarget)} aria-expanded={panel === "explore"} aria-controls="home-explore-menu">Explore Maldives <ChevronDown size={13} /></button>
-        <Link href="/stay">Resorts &amp; Hotels</Link><Link href="/experiences">Tours &amp; Activities</Link><Link href="/atolls">Islands</Link><Link href="/guides">Travel Guide</Link>
+        <Link href="/stay">Resorts &amp; Hotels</Link><Link href="/tours-and-activities">Tours &amp; Activities</Link><Link href="/atolls">Islands</Link><Link href="/guides">Travel Guide</Link>
         <button type="button" onClick={e => toggle("business", e.currentTarget)} aria-expanded={panel === "business"} aria-controls="home-business-note">Business Directory</button>
       </nav>
       <div className={styles.actions}>

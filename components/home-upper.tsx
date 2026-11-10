@@ -19,7 +19,7 @@ function Symbol({kind}:{kind:SymbolKind}) {
 const services=[
  {kind:"plane" as const,title:"Search Flights",description:"Find the best flight options to the Maldives worldwide.",action:"Search Flights",href:"/flights",art:"service-flights.webp"},
  {kind:"bed" as const,title:"Hotels & Resorts",description:"Discover resorts, overwater villas and handpicked stays.",action:"Find Stays",href:"/stay",art:"service-stays.webp"},
- {kind:"mask" as const,title:"Tours & Activities",description:"Explore snorkeling, diving, island hopping and more.",action:"Explore Activities",href:"/experiences",art:"service-activities.webp"},
+ {kind:"mask" as const,title:"Tours & Activities",description:"Explore snorkeling, diving, island hopping and more.",action:"Explore Activities",href:"/tours-and-activities",art:"service-activities.webp"},
 ];
 const benefits=[
  {kind:"shield" as const,title:"Trusted Partners",description:"Leading travel providers"},
