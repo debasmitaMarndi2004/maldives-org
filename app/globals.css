@@ -533,13 +533,3 @@ button[aria-busy="true"] { cursor: progress; }
 .currency-note { margin: 8px 0; }
 .partner-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
 @media (max-width: 640px) { .partner-grid { grid-template-columns: 1fr; } .affiliate-partner .button { min-height: 44px; } }
-
-.flight-form { padding: 20px; background: #fff; border-radius: 20px; box-shadow: 0 19px 42px rgba(8,56,65,.17); }
-.flight-form h2 { margin-top: 0; }
-.flight-form p { font-size: 13px; color: #526970; }
-.flight-fields { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; }
-.flight-fields label { display: grid; gap: 6px; font-size: 13px; }
-.flight-fields .input { min-width: 0; width: 100%; }
-.stay-search-secondary .search-wrap { margin-top: 24px; }
-.flight-results { display: grid; gap: 16px; margin-top: 24px; }
-@media(max-width:640px) { .flight-fields { grid-template-columns:repeat(2,minmax(0,1fr)); } }
