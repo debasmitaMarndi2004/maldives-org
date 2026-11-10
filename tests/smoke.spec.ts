@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { captureApplicationErrors } from "./browser-errors";
 
-test("homepage search and currency controls work", async ({ page }, testInfo) => {
+test("homepage partner search and currency controls work", async ({ page }, testInfo) => {
   const { errors, unavailableMedia } = captureApplicationErrors(page);
   await page.goto("/");
   await expect(page.getByRole("heading", { name: "Find your perfect Maldives." })).toBeVisible();
@@ -13,11 +13,10 @@ test("homepage search and currency controls work", async ({ page }, testInfo) =>
     await page.getByLabel("Currency", { exact: true }).selectOption("INR");
   }
   await expect(page.locator(".stay-footer").first()).toContainText("₹");
-  await page.getByLabel("Check in").fill("2027-02-10");
-  await page.getByLabel("Check out").fill("2027-02-15");
+  await expect(page.getByTitle("Travelpayouts flight search")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Search stays" })).toHaveCount(0);
   if (unavailableMedia.length) await expect(page.locator('.stay-image[data-media-state="fallback"]').first()).toBeVisible();
-  await page.getByRole("button", { name: "Search stays" }).click();
-  await expect(page).toHaveURL(/\/stay\?/);
+
   expect(errors).toEqual([]);
 });
 
