@@ -33,7 +33,7 @@ function WhiteLabelFrame({query}:{query:string}){
 export function WhiteLabelFlights({query}:{query:string}){
  const [external,setExternal]=useState(false);
  const [frameQuery,setFrameQuery]=useState(query);
- return <><p>Flights powered by Aviasales. Final booking and payment take place on the selected airline or agency website. Prices and availability can change.</p>
+ return <>
  {external?<><button className="text-link" onClick={()=>{setFrameQuery(whiteLabelQuery(new URLSearchParams(window.location.search)));setExternal(false);}}>Back to embedded search</button><div className="white-label-fallback"><ExternalFlightSearch /></div></>:<><WhiteLabelFrame query={frameQuery}/><button type="button" className="text-link" onClick={()=>setExternal(true)}>Use external Aviasales search instead</button></>}
  </>;
 }
