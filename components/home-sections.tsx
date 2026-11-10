@@ -2,57 +2,21 @@
 
 import { MediaFallback } from "@/components/media-fallback";
 
-import { FormEvent, useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { ArrowRight, ArrowUpRight, HeartIcon, SearchIcon, StarIcon } from "@/components/icons";
-import { atolls, experiences, images, properties } from "@/lib/data";
+import { ArrowRight, ArrowUpRight, HeartIcon, StarIcon, SunIcon } from "@/components/icons";
+import { experiences, images, properties } from "@/lib/data";
 import { Price } from "@/components/price";
 import { NewsletterFormLive } from "@/components/newsletter-form-live";
 import { AffiliateBookingAction } from "@/components/affiliate-booking-action";
 
-function SearchCard() {
-  const router = useRouter();
-  const [pending, startTransition] = useTransition();
-  const [error, setError] = useState("");
-  const [where, setWhere] = useState("Maldives");
-  const [checkIn, setCheckIn] = useState("");
-  const [checkOut, setCheckOut] = useState("");
-  const [showWhere, setShowWhere] = useState(false);
-  const [showGuests, setShowGuests] = useState(false);
-  const [guests, setGuests] = useState({ adults: 2, children: 0, rooms: 1 });
-  const guestLabel = `${guests.adults + guests.children} guest${guests.adults + guests.children === 1 ? "" : "s"}`;
-  const setGuest = (key: keyof typeof guests, delta: number) => setGuests((current) => ({ ...current, [key]: Math.min(key === "rooms" ? 8 : 12, Math.max(key === "children" ? 0 : 1, current[key] + delta)) }));
-
-  function submit(event: FormEvent) {
-    event.preventDefault();
-    if (Boolean(checkIn) !== Boolean(checkOut) || (checkIn && checkOut <= checkIn)) {
-      setError("Choose both dates, with check out after check in.");
-      return;
-    }
-    setError("");
-    setShowWhere(false); setShowGuests(false);
-    const params = new URLSearchParams({ where, checkIn, checkOut, travelers: guestLabel, adults: String(guests.adults), children: String(guests.children), rooms: String(guests.rooms) });
-    startTransition(() => router.push(`/stay?${params.toString()}`));
-  }
-
-  return <div className="search-wrap page-wrap" data-reveal><form className="search-card" onSubmit={submit}>
-    <div className="search-field" style={{ position: "relative" }}>
-      <label htmlFor="where">WHERE</label>
-      <button id="where" type="button" aria-expanded={showWhere} aria-controls="location-options" onClick={() => { setShowWhere(!showWhere); setShowGuests(false); }}>{where}</button>
-      {showWhere && <div className="search-popover" id="location-options"><p>Try an atoll, island or stay</p>{["Maldives", ...atolls.slice(0, 4)].map((place) => <button className="suggestion" key={place} type="button" onClick={() => { setWhere(place); setShowWhere(false); }}>{place}</button>)}</div>}
-    </div>
-    <div className="search-field"><label htmlFor="check-in">CHECK IN</label><input id="check-in" type="date" value={checkIn} onChange={(event) => setCheckIn(event.target.value)} placeholder="Add dates" /></div>
-    <div className="search-field"><label htmlFor="check-out">CHECK OUT</label><input id="check-out" type="date" value={checkOut} onChange={(event) => setCheckOut(event.target.value)} placeholder="Add dates" /></div>
-    <div className="search-field" style={{ position: "relative" }}>
-      <label htmlFor="travelers">TRAVELERS</label>
-      <button id="travelers" type="button" aria-expanded={showGuests} aria-controls="guest-options" onClick={() => { setShowGuests(!showGuests); setShowWhere(false); }}>{guestLabel}</button>
-      {showGuests && <div className="search-popover guest-popover" id="guest-options">{(["adults", "children", "rooms"] as const).map((key) => <div className="guest-row" key={key}><span>{key[0].toUpperCase() + key.slice(1)}</span><span className="counter"><button type="button" onClick={() => setGuest(key, -1)} aria-label={`Remove ${key}`}>−</button><span>{guests[key]}</span><button type="button" onClick={() => setGuest(key, 1)} aria-label={`Add ${key}`}>+</button></span></div>)}</div>}
-    </div>
-    <button className="search-action" type="submit" disabled={pending} aria-busy={pending}><SearchIcon size={14} />{pending ? "Searching…" : "Search stays"}</button>
-  </form>{error && <p className="form-note" role="alert">{error}</p>}</div>;
+function LiveWidget() {
+  const [now, setNow] = useState<Date | null>(null);
+  useEffect(() => { const initial = window.setTimeout(() => setNow(new Date()), 0); const id = window.setInterval(() => setNow(new Date()), 60000); return () => { window.clearTimeout(initial); window.clearInterval(id); }; }, []);
+  const time = now ? new Intl.DateTimeFormat("en-US", { timeZone: "Indian/Maldives", hour: "numeric", minute: "2-digit" }).format(now) : "10:08 PM";
+  const date = now ? new Intl.DateTimeFormat("en-US", { timeZone: "Indian/Maldives", month: "short", day: "numeric" }).format(now) : "Sep 30";
+  return <div className="page-wrap live-bar" data-reveal><div className="live-location"><span className="sun-bubble"><SunIcon size={17} /></span><div><span className="eyebrow">Maldives now</span><strong>Malé, Maldives</strong></div></div><div className="live-stats"><div><strong>{time}</strong><small>Local time</small></div><div><strong>{date}</strong><small>Local date</small></div><div><strong>28°C</strong><small>Sample weather</small></div></div></div>;
 }
-
 
 const escapes = [
   { label: "ICONIC", title: "Overwater Villas", description: "Wake up directly above the Indian Ocean.", image: images.overwater, href: "/stay?style=overwater" },
@@ -77,7 +41,7 @@ export default function HomeSections() {
   const featured = useMemo(() => properties.slice(0, 3), []);
   return <main className="site-main">
     <section className="hero" data-reveal><div className="hero-image" aria-hidden="true" /><div className="page-wrap hero-content"><div className="hero-copy"><span className="eyebrow">The islands you&apos;ve been dreaming about</span><h1>Find your perfect Maldives.</h1><p>Explore extraordinary resorts, overwater villas, private islands and unforgettable experiences, then compare your options before booking on a named partner website.</p><div className="hero-actions"><Link className="button button-sun" href="/stay">Explore Resorts <ArrowUpRight size={14} /></Link><Link className="button button-ghost" href="/experiences">Discover Experiences <ArrowUpRight size={14} /></Link></div></div></div></section>
-    <SearchCard />
+    <LiveWidget />
     <section className="section page-wrap" data-reveal><div className="section-header"><div><span className="eyebrow">Choose your escape</span><h2>Stay your way.</h2></div><p>From once-in-a-lifetime overwater villas to family-friendly islands and intimate boutique resorts, find the Maldives that fits your trip.</p></div><div className="escape-grid">{escapes.map((escape) => <Link href={escape.href} className="escape-card" style={{ "--card-image": `url(${escape.image})` } as React.CSSProperties} key={escape.title}><div className="escape-card-copy"><span className="eyebrow">{escape.label}</span><h3>{escape.title}</h3><p>{escape.description}</p></div></Link>)}</div></section>
     <section className="section section-soft" data-reveal><div className="page-wrap"><div className="section-header"><div><span className="eyebrow">Featured stays</span><h2>Resorts worth the flight.</h2></div><p>Curated places travellers love. These cards can eventually connect directly to affiliate partners.</p></div><div className="featured-grid">{featured.map((property) => <StayCard property={property} key={property.slug} />)}</div><div className="section-cta"><Link href="/stay" className="text-link">See all stays <ArrowRight size={14} /></Link></div></div></section>
     <section className="section page-wrap" data-reveal><div className="section-header"><div><span className="eyebrow">Beyond the villa</span><h2>Do something unforgettable.</h2></div><p>Trade a slow morning for a reef adventure, a sunset sail or a sandbank that feels like it belongs only to you.</p></div><div className="experience-grid">{experiences.map((experience) => <Link href={`/experiences/${experience.slug}`} className="experience-tile" style={{ "--tile-image": `url(${experience.image})` } as React.CSSProperties} key={experience.slug}><div><h3>{experience.name}</h3><p>{experience.duration} · From <Price usd={experience.price} /></p></div></Link>)}</div></section>

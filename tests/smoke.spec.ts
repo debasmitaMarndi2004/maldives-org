@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { captureApplicationErrors } from "./browser-errors";
 
-test("homepage search and currency controls work", async ({ page }, testInfo) => {
+test("homepage live strip and currency controls work", async ({ page }, testInfo) => {
   const { errors, unavailableMedia } = captureApplicationErrors(page);
   const widgetRequests: string[] = [];
   page.on("request", request => { if (new URL(request.url()).hostname === "tpscr.com") widgetRequests.push(request.url()); });
@@ -16,11 +16,13 @@ test("homepage search and currency controls work", async ({ page }, testInfo) =>
     await page.getByLabel("Currency", { exact: true }).selectOption("INR");
   }
   await expect(page.locator(".stay-footer").first()).toContainText("₹");
-  await page.getByLabel("Check in").fill("2027-02-10");
-  await page.getByLabel("Check out").fill("2027-02-15");
+  await expect(page.locator(".live-bar")).toBeVisible();
+  await expect(page.locator(".live-bar")).toContainText("Maldives now");
+  await expect(page.locator(".live-bar")).toContainText("Sample weather");
+  await expect(page.getByRole("button", { name: "Search stays", exact: true })).toHaveCount(0);
+  await expect(page.locator(".search-card")).toHaveCount(0);
   if (unavailableMedia.length) await expect(page.locator('.stay-image[data-media-state="fallback"]').first()).toBeVisible();
-  await page.getByRole("button", { name: "Search stays" }).click();
-  await expect(page).toHaveURL(/\/stay\?/);
+
   expect(widgetRequests).toEqual([]);
   expect(errors).toEqual([]);
 });
