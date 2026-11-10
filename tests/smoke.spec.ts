@@ -1,15 +1,21 @@
 import { expect, test } from "@playwright/test";
+import { captureApplicationErrors } from "./browser-errors";
 
-test("homepage search and currency controls work", async ({ page }) => {
-  const errors: string[] = [];
-  page.on("pageerror", (error) => errors.push(error.message));
-  page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
+test("homepage search and currency controls work", async ({ page }, testInfo) => {
+  const { errors, unavailableMedia } = captureApplicationErrors(page);
   await page.goto("/");
   await expect(page.getByRole("heading", { name: "Find your perfect Maldives." })).toBeVisible();
-  await page.getByLabel("Currency").selectOption("INR");
+  if (testInfo.project.name === "mobile") {
+    await page.getByRole("button", { name: "Open menu" }).click();
+    await page.getByLabel("Mobile currency", { exact: true }).selectOption("INR");
+    await page.getByRole("button", { name: "Close menu" }).click();
+  } else {
+    await page.getByLabel("Currency", { exact: true }).selectOption("INR");
+  }
   await expect(page.locator(".stay-footer").first()).toContainText("₹");
   await page.getByLabel("Check in").fill("2027-02-10");
   await page.getByLabel("Check out").fill("2027-02-15");
+  if (unavailableMedia.length) await expect(page.locator('.stay-image[data-media-state="fallback"]').first()).toBeVisible();
   await page.getByRole("button", { name: "Search stays" }).click();
   await expect(page).toHaveURL(/\/stay\?/);
   expect(errors).toEqual([]);
@@ -29,7 +35,7 @@ test("booking request endpoint rejects invalid input without writing data", asyn
   expect((await response.json()).ok).toBe(false);
 });
 
-test("Hotelbeds confirmation endpoints stay safe before certification", async ({ request }) => {
+test("direct supplier confirmation endpoints stay disabled in affiliate MVP", async ({ request }) => {
   const checkRate = await request.post("/api/hotelbeds/checkrate", { data: { rateKeys: ["qa-rate-key"] } });
   expect([400, 503]).toContain(checkRate.status());
   expect((await checkRate.json()).ok).toBe(false);
@@ -51,6 +57,6 @@ test("dynamic content routes render", async ({ page }) => {
   for (const route of ["/stay/overwater-romance", "/resorts/private-island-luxury", "/guesthouses/coral-garden-house", "/experiences/dive-with-manta-rays", "/booking/MD-PREVIEW", "/booking/MD-PREVIEW/voucher", "/hotelbeds-certification", "/checkout"]) {
     const response = await page.goto(route);
     expect(response?.status(), route).toBe(200);
-    await expect(page.locator("main")).toBeVisible();
+    await expect(page.getByRole("main")).toBeVisible();
   }
 });

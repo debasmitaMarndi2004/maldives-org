@@ -1,14 +1,5 @@
-import { CheckoutPanel } from "@/components/checkout-panel";
-import { getSupabaseAdmin } from "@/lib/supabase-admin";
+import Link from "next/link";
 
-export default async function CheckoutPage({ searchParams }: { searchParams: Promise<{ booking?: string }> }) {
-  const { booking: reference = "" } = await searchParams;
-  const supabase = getSupabaseAdmin();
-  let record: { offer_title: string; price_amount: number | null; price_currency: string | null; price_from_usd: number | null; currency: string; status: string } | null = null;
-  if (supabase && reference) {
-    const result = await supabase.from("booking_requests").select("offer_title, price_amount, price_currency, price_from_usd, currency, status").eq("reference", reference).maybeSingle();
-    record = result.data;
-  }
-
-  return <main className="page-main"><div className="page-wrap content-page"><section className="page-hero"><div className="page-heading"><span className="eyebrow">CHECKOUT</span><h1>One clear step before you go.</h1><p>Payment is protected by Stripe and only becomes available after the request and supplier amount are confirmed.</p></div></section>{record ? <CheckoutPanel reference={reference} title={record.offer_title} amount={record.price_amount ?? record.price_from_usd ?? 0} currency={record.price_currency || record.currency || "USD"} enabled={Boolean(record.status === "confirmed" && process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY && process.env.STRIPE_SECRET_KEY)} /> : <div className="detail-card"><h2>Checkout is not active yet.</h2><p>{reference ? "This reference is not available in the connected booking database." : "Open checkout from a saved booking reference."} Add Supabase and Stripe keys after the account setup to activate secure payment.</p></div>}</div></main>;
+export default function CheckoutPage() {
+  return <main className="page-main"><div className="page-wrap content-page"><section className="page-hero"><div className="page-heading"><span className="eyebrow">AFFILIATE DISCOVERY</span><h1>Book with the partner, when you’re ready.</h1><p>Maldives.org does not take payments or confirm direct reservations in this MVP.</p></div></section><div className="detail-card"><h2>Direct checkout is disabled.</h2><p>When an approved partner link is available, its provider is shown before you leave Maldives.org. Booking, payment, availability and cancellation terms are handled on that partner’s website.</p><p>No payment has been taken and no booking has been created here.</p><div className="booking-actions"><Link className="button button-teal" href="/stay">Explore stays</Link><Link className="button button-ghost button-dark" href="/experiences">Explore experiences</Link></div></div></div></main>;
 }

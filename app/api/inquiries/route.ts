@@ -32,7 +32,7 @@ export async function POST(request: Request) {
       persisted = true;
     }
 
-    if (process.env.ADMIN_NOTIFICATION_EMAIL) {
+    if (persisted && process.env.ADMIN_NOTIFICATION_EMAIL) {
       await sendTransactionalEmail({
         to: process.env.ADMIN_NOTIFICATION_EMAIL,
         subject: `New Maldives.org enquiry ${reference}`,

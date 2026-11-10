@@ -24,7 +24,7 @@ export async function POST(request: Request) {
       persisted = true;
     }
 
-    if (process.env.RESEND_API_KEY && process.env.RESEND_FROM_EMAIL) {
+    if (persisted && process.env.RESEND_API_KEY && process.env.RESEND_FROM_EMAIL) {
       await sendTransactionalEmail({
         to: email,
         subject: "Welcome to Maldives.org island notes",

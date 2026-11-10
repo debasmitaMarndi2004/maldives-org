@@ -1,3 +1,4 @@
+import { directTransactionsDisabled, disabledTransactionResponse } from "@/lib/transaction-policy";
 import { confirmHotelBooking, getHotelbedsConfig, isHotelbedsMutualTlsConfigured } from "@/lib/hotelbeds";
 import { normalizeHotelbedsBooking } from "@/lib/hotelbeds-data";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
@@ -9,6 +10,7 @@ function text(value: unknown, max = 200) {
 }
 
 export async function POST(request: Request) {
+  if (directTransactionsDisabled()) return disabledTransactionResponse("booking");
   try {
     const body = (await request.json()) as Record<string, unknown>;
     const confirm = body.confirm === true;

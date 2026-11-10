@@ -1,3 +1,4 @@
+import { directTransactionsDisabled, disabledTransactionResponse } from "@/lib/transaction-policy";
 import { checkHotelRate, getHotelbedsConfig, isHotelbedsMutualTlsConfigured } from "@/lib/hotelbeds";
 import { extractHotelbedsRates } from "@/lib/hotelbeds-data";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
@@ -5,6 +6,7 @@ import { getSupabaseAdmin } from "@/lib/supabase-admin";
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
+  if (directTransactionsDisabled()) return disabledTransactionResponse("checkrate");
   try {
     const body = (await request.json()) as Record<string, unknown>;
     const rateKeys = Array.isArray(body.rateKeys)

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" fill="none">
+  <title>Island illustration placeholder</title>
+  <desc>Original geometric lagoon illustration, shown when a listing photograph is unavailable. This is not a photograph of a property.</desc>
+  <defs>
+    <linearGradient id="sea" x1="0" y1="0" x2="1200" y2="800" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#075160"/>
+      <stop offset="1" stop-color="#159DA7"/>
+    </linearGradient>
+    <radialGradient id="lagoon">
+      <stop stop-color="#D8FAE6" stop-opacity=".85"/>
+      <stop offset="1" stop-color="#7BD9CA" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="sand" x1="570" y1="250" x2="750" y2="610" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF5D9"/>
+      <stop offset="1" stop-color="#E8D7AE"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#sea)" d="M0 0h1200v800H0z"/>
+  <ellipse cx="715" cy="393" rx="444" ry="320" transform="rotate(-17 715 393)" fill="url(#lagoon)"/>
+  <g stroke="#B7F4E4" stroke-opacity=".18" stroke-width="2">
+    <path d="M-80 260C210 60 350 410 650 150s550-90 700-140"/>
+    <path d="M-80 305C210 105 350 455 650 195s550-90 700-140"/>
+    <path d="M-80 350C210 150 350 500 650 240s550-90 700-140"/>
+    <path d="M-80 610C210 410 350 760 650 500s550-90 700-140"/>
+    <path d="M-80 655C210 455 350 805 650 545s550-90 700-140"/>
+  </g>
+  <path d="M525 338c62-124 205-137 293-64 61 50 34 119-19 190-64 85-195 151-259 97-57-48-67-119-15-223Z" fill="#AFF0D5" fill-opacity=".7"/>
+  <path d="M552 349c53-102 168-117 236-54 48 45 21 102-21 159-55 75-160 125-208 81-43-39-52-103-7-186Z" fill="url(#sand)"/>
+  <path d="M583 354c41-76 125-88 175-44 36 31 13 78-18 120-40 55-111 93-147 61-31-28-42-76-10-137Z" fill="#397E65"/>
+  <path d="M612 352c27-44 85-61 119-27 28 28 9 58-17 92-24 32-68 57-95 34-24-20-29-62-7-99Z" fill="#4F9871"/>
+  <circle cx="1000" cy="150" r="37" fill="#FFE3A0" fill-opacity=".75"/>
+  <g fill="#E2FAEE" fill-opacity=".38">
+    <path d="m254 564 19-5-10 17-19 5z"/>
+    <path d="m285 548 12-3-6 11-12 3z"/>
+    <path d="m327 602 18-4-10 15-17 4z"/>
+  </g>
+  <text x="42" y="754" fill="#E9FFFA" fill-opacity=".9" font-family="Arial, sans-serif" font-size="22" letter-spacing="2">ISLAND ILLUSTRATION · PHOTO UNAVAILABLE</text>
+</svg>
