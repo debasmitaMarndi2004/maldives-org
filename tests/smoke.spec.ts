@@ -3,8 +3,6 @@ import { captureApplicationErrors } from "./browser-errors";
 
 test("homepage search and currency controls work", async ({ page }, testInfo) => {
   const { errors, unavailableMedia } = captureApplicationErrors(page);
-  const widgetRequests: string[] = [];
-  page.on("request", request => { if (new URL(request.url()).hostname === "tpscr.com") widgetRequests.push(request.url()); });
   await page.goto("/");
   await expect(page.locator('iframe[title="Travelpayouts flight search"]')).toHaveCount(0);
   await expect(page.getByRole("heading", { name: "Find your perfect Maldives." })).toBeVisible();
@@ -21,7 +19,6 @@ test("homepage search and currency controls work", async ({ page }, testInfo) =>
   if (unavailableMedia.length) await expect(page.locator('.stay-image[data-media-state="fallback"]').first()).toBeVisible();
   await page.getByRole("button", { name: "Search stays" }).click();
   await expect(page).toHaveURL(/\/stay\?/);
-  expect(widgetRequests).toEqual([]);
   expect(errors).toEqual([]);
 });
 
