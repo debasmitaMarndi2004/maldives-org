@@ -533,3 +533,11 @@ button[aria-busy="true"] { cursor: progress; }
 .currency-note { margin: 8px 0; }
 .partner-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
 @media (max-width: 640px) { .partner-grid { grid-template-columns: 1fr; } .affiliate-partner .button { min-height: 44px; } }
+
+.flight-search-trial { position: relative; z-index: 5; margin-top: -52px; }
+.flight-search-trial-card { padding: 20px; background: #fff; border: 1px solid #dce8e9; border-radius: 16px; }
+.flight-search-trial-card h2 { font-size: 20px; margin: 0 0 8px; }
+.flight-search-trial-card > p { font-size: 13px; color: #526970; margin: 0 0 12px; }
+.flight-search-trial-content { min-width: 0; max-width: 100%; overflow-x: auto; }
+.flight-search-trial-content iframe { max-width: 100%; border: 0; }
+@media (max-width: 640px) { .flight-search-trial-card { padding: 14px; } }
