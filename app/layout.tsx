@@ -13,5 +13,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en" data-scroll-behavior="smooth"><body><CurrencyProvider><AffiliateProvider><a className="skip-link" href="#main-content">Skip to content</a><Navbar /><ScrollRevealObserver /><div id="main-content" tabIndex={-1}>{children}</div><Footer /></AffiliateProvider></CurrencyProvider><TravelpayoutsDrive permissions={getTravelpayoutsDrivePermissions()} /></body></html>;
+  return <html lang="en" data-scroll-behavior="smooth"><head><TravelpayoutsDrive permissions={getTravelpayoutsDrivePermissions()} /></head><body><CurrencyProvider><AffiliateProvider><a className="skip-link" href="#main-content">Skip to content</a><Navbar /><ScrollRevealObserver /><div id="main-content" tabIndex={-1}>{children}</div><Footer /></AffiliateProvider></CurrencyProvider></body></html>;
 }
