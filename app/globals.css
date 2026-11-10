@@ -541,3 +541,11 @@ button[aria-busy="true"] { cursor: progress; }
 .flight-search-trial-content { min-width: 0; max-width: 100%; overflow-x: auto; }
 .flight-search-trial-content iframe { max-width: 100%; border: 0; }
 @media (max-width: 640px) { .flight-search-trial-card { padding: 14px; } }
+
+.white-label-frame { margin: 24px 0 16px; min-width: 0; }
+.white-label-frame iframe { display: block; width: 100%; border: 0; }
+.white-label-frame iframe[hidden] { display: none; }
+.white-label-fallback .flight-search-trial { margin-top: 24px; }
+.flight-entry-card { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+.flight-entry-card h2 { font-size: 24px; font-weight: 700; }
+.flight-entry-card p { margin-top: 8px; font-size: 13px; color: var(--ink-muted); }

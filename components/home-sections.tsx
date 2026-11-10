@@ -1,6 +1,5 @@
 "use client";
 
-import { AviasalesWidget } from "@/components/aviasales-widget";
 import { MediaFallback } from "@/components/media-fallback";
 
 import { useEffect, useMemo, useState } from "react";
@@ -42,7 +41,7 @@ export default function HomeSections() {
   const featured = useMemo(() => properties.slice(0, 3), []);
   return <main className="site-main">
     <section className="hero" data-reveal><div className="hero-image" aria-hidden="true" /><div className="page-wrap hero-content"><div className="hero-copy"><span className="eyebrow">The islands you&apos;ve been dreaming about</span><h1>Find your perfect Maldives.</h1><p>Explore extraordinary resorts, overwater villas, private islands and unforgettable experiences, then compare your options before booking on a named partner website.</p><div className="hero-actions"><Link className="button button-sun" href="/stay">Explore Resorts <ArrowUpRight size={14} /></Link><Link className="button button-ghost" href="/experiences">Discover Experiences <ArrowUpRight size={14} /></Link></div></div></div></section>
-    <AviasalesWidget />
+    <section className="search-wrap page-wrap" aria-label="Flight search"><div className="detail-card flight-entry-card"><div><h2>Find flights to the Maldives</h2><p>Choose your departure airport and view Aviasales flight results on Maldives.org.</p></div><Link className="button button-teal" href="/flights">Search flights <ArrowUpRight size={14} /></Link></div></section>
     <LiveWidget />
     <section className="section page-wrap" data-reveal><div className="section-header"><div><span className="eyebrow">Choose your escape</span><h2>Stay your way.</h2></div><p>From once-in-a-lifetime overwater villas to family-friendly islands and intimate boutique resorts, find the Maldives that fits your trip.</p></div><div className="escape-grid">{escapes.map((escape) => <Link href={escape.href} className="escape-card" style={{ "--card-image": `url(${escape.image})` } as React.CSSProperties} key={escape.title}><div className="escape-card-copy"><span className="eyebrow">{escape.label}</span><h3>{escape.title}</h3><p>{escape.description}</p></div></Link>)}</div></section>
     <section className="section section-soft" data-reveal><div className="page-wrap"><div className="section-header"><div><span className="eyebrow">Featured stays</span><h2>Resorts worth the flight.</h2></div><p>Curated places travellers love. These cards can eventually connect directly to affiliate partners.</p></div><div className="featured-grid">{featured.map((property) => <StayCard property={property} key={property.slug} />)}</div><div className="section-cta"><Link href="/stay" className="text-link">See all stays <ArrowRight size={14} /></Link></div></div></section>
