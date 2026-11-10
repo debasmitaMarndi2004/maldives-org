@@ -1,9 +1,8 @@
 "use client";
 
-import { FlightSearchWidget } from "@/components/flight-search-widget";
 import { MediaFallback } from "@/components/media-fallback";
 
-import { FormEvent, useCallback, useEffect, useMemo, useState, useTransition } from "react";
+import { FormEvent, useEffect, useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowRight, ArrowUpRight, HeartIcon, SearchIcon, StarIcon, SunIcon } from "@/components/icons";
@@ -82,13 +81,10 @@ function ChatWidget() {
 }
 
 export default function HomeSections() {
-  const [flightUnavailable, setFlightUnavailable] = useState(false);
-  const restoreSearch = useCallback(() => setFlightUnavailable(true), []);
   const featured = useMemo(() => properties.slice(0, 3), []);
   return <main className="site-main">
     <section className="hero" data-reveal><div className="hero-image" aria-hidden="true" /><div className="page-wrap hero-content"><div className="hero-copy"><span className="eyebrow">The islands you&apos;ve been dreaming about</span><h1>Find your perfect Maldives.</h1><p>Explore extraordinary resorts, overwater villas, private islands and unforgettable experiences, then compare your options before booking on a named partner website.</p><div className="hero-actions"><Link className="button button-sun" href="/stay">Explore Resorts <ArrowUpRight size={14} /></Link><Link className="button button-ghost" href="/experiences">Discover Experiences <ArrowUpRight size={14} /></Link></div></div></div></section>
-    <div hidden={!flightUnavailable}><SearchCard /></div>
-    {flightUnavailable ? <p className="page-wrap form-note" role="status">Partner flight search is unavailable. You can still search stays here.</p> : <FlightSearchWidget onUnavailable={restoreSearch} />}
+    <SearchCard />
     <LiveWidget />
     <section className="section page-wrap" data-reveal><div className="section-header"><div><span className="eyebrow">Choose your escape</span><h2>Stay your way.</h2></div><p>From once-in-a-lifetime overwater villas to family-friendly islands and intimate boutique resorts, find the Maldives that fits your trip.</p></div><div className="escape-grid">{escapes.map((escape) => <Link href={escape.href} className="escape-card" style={{ "--card-image": `url(${escape.image})` } as React.CSSProperties} key={escape.title}><div className="escape-card-copy"><span className="eyebrow">{escape.label}</span><h3>{escape.title}</h3><p>{escape.description}</p></div></Link>)}</div></section>
     <section className="section section-soft" data-reveal><div className="page-wrap"><div className="section-header"><div><span className="eyebrow">Featured stays</span><h2>Resorts worth the flight.</h2></div><p>Curated places travellers love. These cards can eventually connect directly to affiliate partners.</p></div><div className="featured-grid">{featured.map((property) => <StayCard property={property} key={property.slug} />)}</div><div className="section-cta"><Link href="/stay" className="text-link">See all stays <ArrowRight size={14} /></Link></div></div></section>
