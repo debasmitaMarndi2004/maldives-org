@@ -28,7 +28,8 @@ test("category directories constrain inventory, filtering handles empty results,
   await expect(page.getByRole("heading", { name: "Coral Garden House", exact: true })).toHaveCount(0);
   await expect(page.getByRole("heading", { name: "Maafushi Morning", exact: true })).toHaveCount(0);
   await page.goto("/guesthouses");
-  await expect(page.getByRole("heading", { name: "Coral Garden House", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Verified guesthouse listings are on their way.", exact: true })).toBeVisible();
+  await expect(page.locator(".directory-grid .stay-card")).toHaveCount(0);
   await expect(page.getByRole("heading", { name: "Private Island Luxury", exact: true })).toHaveCount(0);
   await page.goto("/stay");
   await page.getByPlaceholder("Search stays or islands").fill("NO_MATCH_REGRESSION");

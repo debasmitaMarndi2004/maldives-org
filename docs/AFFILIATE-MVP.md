@@ -15,7 +15,7 @@ It is an array whose records have exactly these fields:
 | --- | --- |
 | `provider` | `travelpayouts`, `viator`, `booking-com`, or `getyourguide` |
 | `productType` | `stay` or `experience` |
-| `slug` | An existing product slug from `lib/data.ts` |
+| `slug` | An existing product slug from `lib/data.ts` or the reviewed `lib/accommodations/catalog.ts` |
 | `approved` | Boolean `true`, set only after human commercial/content review |
 | `url` | The exact approved HTTPS affiliate destination supplied by that partner |
 
@@ -55,7 +55,9 @@ provider and explains that booking and payment happen on that partner website.
 - **Booking.com:** approved partner arrangement and property link/attribution.
 - **GetYourGuide:** approved partner account and activity link/attribution.
 
-Current property and activity records are samples. Do not attach an approved
+Legacy property and activity records in `lib/data.ts` are samples. The independent
+source-reviewed accommodation collection lives in `lib/accommodations/catalog.ts`;
+see `docs/STAY22-ACCOMMODATIONS.md` for its separate, isolated Stay22 adapter. Do not attach an approved
 commercial link until the listing accurately identifies that partner product.
 Do not change a sample price into an available/live claim when configuring a link.
 

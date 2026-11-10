@@ -57,6 +57,8 @@ export default defineConfig({
       ANTHROPIC_API_KEY: "",
       AFFILIATE_APPROVED_LINKS_JSON: JSON.stringify(approvedAffiliateFixtures),
       TRAVELPAYOUTS_DRIVE_ENABLED: "false",
+      STAY22_ENABLED: "false",
+      STAY22_APPROVED_LINKS_JSON: "",
     },
   },
   projects: [

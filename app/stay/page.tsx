@@ -1,10 +1,13 @@
 import { HotelbedsLiveResults, type HotelbedsLiveStay } from "@/components/hotelbeds-live-results";
-import { StayDirectory } from "@/components/public-pages";
+import { AccommodationDirectory } from "@/components/accommodations/directory";
+import { pageAccommodationFilters } from "@/lib/accommodations/page-filters";
+import { accommodationDirectoryMetadata } from "@/lib/accommodations/metadata";
 import { getConfiguredHotelCodes, searchHotelAvailability } from "@/lib/hotelbeds";
 import { normalizeHotelbedsResults } from "@/lib/hotelbeds-data";
 import { properties } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
+export const metadata = accommodationDirectoryMetadata();
 
 type SearchParams = Record<string, string | string[] | undefined>;
 
@@ -25,10 +28,8 @@ export default async function StayPage({
   const checkIn = firstParam(params.checkIn);
   const checkOut = firstParam(params.checkOut);
   const codes = getConfiguredHotelCodes();
-  const where = firstParam(params.where);
-  const initialQuery = firstParam(params.q) || (where && where !== "Maldives" ? where.replace(/\s+Atoll$/i, "") : "");
-  const initialStyle = firstParam(params.style) || "";
-  const directory = <StayDirectory key={`${initialQuery}:${initialStyle}`} initialQuery={initialQuery} initialStyle={initialStyle} />;
+  const filters = pageAccommodationFilters(params);
+  const directory = <AccommodationDirectory key={JSON.stringify(filters)} initialFilters={filters} />;
   const guestValue = (key: string, fallback: number, min: number, max: number) => {
     const value = Number(firstParam(params[key]) ?? fallback);
     return Number.isInteger(value) && value >= min && value <= max ? value : fallback;

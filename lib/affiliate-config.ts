@@ -1,10 +1,12 @@
 import "server-only";
 
 import { experiences, properties } from "@/lib/data";
+import { accommodations } from "@/lib/accommodations/catalog";
 import { affiliateHandoffPath, affiliateProviders, parseApprovedLinks, type AffiliateCatalog, type AffiliateProviderId } from "@/lib/affiliate-providers";
 
 const knownProducts = new Set([
   ...properties.map((property) => `stay:${property.slug}`),
+  ...accommodations.map((property) => `stay:${property.slug}`),
   ...experiences.map((experience) => `experience:${experience.slug}`),
 ]);
 
