@@ -17,7 +17,7 @@ The results URL is fixed to the embed document. Search should update that docume
 
 `TPWL_CONFIGURATION.flightParams` presets destination MLE and leaves origin unrestricted; this field was checked against the actual served vendor runtime. The dashboard's returned `flightParams` was empty on inspection. Also set **Content → Pre-filled destination → arrival Malé (MLE)** in the dashboard so its saved configuration agrees with the integration. Dates, passengers and currency are managed by the provider, not a parallel custom form. USD is the account's current default currency; extra currencies must be enabled in the provider dashboard. Do not treat the app-shell currency selector as controlling provider currency.
 
-The homepage search entry opens `/flights` on Maldives.org. The existing authorized tpscr external-search component is reused via the fallback button. It is not a fake embedded-results UI. Final bookings/payments remain with the chosen airline/agency. Stripe and Hotelbeds transaction guards are unchanged.
+The homepage search entry opens `/flights` on Maldives.org. The flights page no longer displays an external-search switch. Loader failures show a refresh/retry message without fake results. Final bookings/payments remain with the chosen airline/agency. Stripe and Hotelbeds transaction guards are unchanged.
 
 ## Account/domain prerequisites
 
@@ -38,3 +38,7 @@ The latest master integration reuses its existing Aviasales fallback component a
 On 2026-11-10, direct Cloud Chromium requests failed with `ERR_CERT_AUTHORITY_INVALID`; the browser's actual NSS database is read-only in the execution sandbox. Temporary trust-store experiments did not resolve direct Chromium access. TLS verification was never disabled, and no transport workaround is shipped in application code.
 
 A separate diagnostic Playwright transport fetched the real tpscr and apistp GET responses through the inherited proxy with Node TLS validation enabled, preserving real provider response headers/body. That rendered the actual White Label form and resolved the default destination to **Male, Maldives**; origin was editable and airport lookup services returned HTTP 200. This was real upstream content, not synthetic fares. It does not establish that direct browser loading, a complete live fare search, commissions or final booking work on the published domain. Those checks remain necessary on an authorized hostname.
+
+## Results scrolling
+
+The compact flights heading and centered widget use scoped page styles. After a provider `urlchange` search event, the bridge waits for visible content in the tickets container (including Shadow DOM) and sends one scroll request. The parent validates the message source and origin, accounts for the sticky header, and scrolls smoothly to the results. Reduced-motion preference uses instant scrolling. Initial page loads and repeated resize/poll reports do not repeatedly pull the visitor down the page.

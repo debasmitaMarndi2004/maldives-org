@@ -549,3 +549,10 @@ button[aria-busy="true"] { cursor: progress; }
 .flight-entry-card { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
 .flight-entry-card h2 { font-size: 24px; font-weight: 700; }
 .flight-entry-card p { margin-top: 8px; font-size: 13px; color: var(--ink-muted); }
+
+.flights-hero { padding: 108px 0 24px; text-align: center; }
+.flights-hero .page-heading { max-width: 900px; }
+.flights-hero h1 { font-size: clamp(32px, 4.5vw, 54px); line-height: 1.06; }
+.flights-main { padding: 24px 0 64px; }
+.flights-main > .page-wrap { width: min(1120px, calc(100% - 32px)); }
+.flights-main .white-label-frame { margin: 0 auto; max-width: 1120px; }
