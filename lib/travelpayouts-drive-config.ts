@@ -1,18 +1,14 @@
 import "server-only";
 
-import type { DrivePermissions } from "@/lib/travelpayouts-drive";
+import { isTravelpayoutsDriveEnabled, type DrivePermissions } from "@/lib/travelpayouts-drive";
 
 /**
- * Verification is blocked by Cloud proxy HTTP 403. These are deliberately
- * code-review gates, not environment flags that could silently authorize code.
- * A real consent-manager integration is required before consent can be granted.
+ * The site owner explicitly authorized activation. This is an operator switch,
+ * not a claim of vendor verification, privacy review or visitor consent.
+ * Official documentation remains inaccessible through the Cloud proxy.
  */
 export function getTravelpayoutsDrivePermissions(): DrivePermissions {
   return {
-    enabled: process.env.TRAVELPAYOUTS_DRIVE_ENABLED === "true",
-    sourceVerified: false,
-    attributionProtectionVerified: false,
-    privacyReviewed: false,
-    consentGranted: false,
+    enabled: isTravelpayoutsDriveEnabled(process.env.TRAVELPAYOUTS_DRIVE_ENABLED),
   };
 }

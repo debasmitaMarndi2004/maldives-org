@@ -1,91 +1,67 @@
-# Travelpayouts Drive: prepared, not activated
+# Travelpayouts Drive
 
-The supplied dashboard snippet is integrated through `next/script` with a stable
-ID and `afterInteractive`, rather than pasting an executable script into the
-server HTML. The exact user-supplied source is
-`https://emrldco.com/NTk4NDE3.js?t=598417`. The dashboard marker is public script
-configuration, not an API secret. Markdown link formatting was removed from the
-source value. The bootstrap retains asynchronous loading and `data-cmp-ab="2"`;
-a fixed script-element ID prevents duplicate insertion. Optimizer attributes from
-the supplied outer script are preserved. No external script is fetched while blocked.
+## Current activation
 
-## Verification status
+The site owner explicitly requested automatic activation. Drive is now enabled
+when `TRAVELPAYOUTS_DRIVE_ENABLED` is unset or exactly `true`. Set it to `false`
+and rebuild/restart to disable it without removing code. Other values fail closed.
+Static Next.js layouts can capture this value at build time: a production
+configuration currently set to `false` must be changed to `true` for activation.
 
-Live vendor code has **not** been executed. Read-only requests to these hosts
-were blocked at the Cloud proxy with CONNECT HTTP 403:
+This is an owner activation decision, not a claim of official source verification,
+legal review or visitor consent. No review/consent flags are fabricated. The site
+has no dedicated Drive consent-manager integration; applicable disclosure and
+consent requirements still need review.
 
-- `support.travelpayouts.com` (Drive and emrldco documentation searches)
-- `www.travelpayouts.com` (attempted Drive documentation pages)
-- `emrldco.com` (the supplied script)
+## Installation and duplicate protection
 
-Those requests do not establish documentation contents or domain ownership.
-The dashboard snippet establishes the requested configuration, but independent
-official confirmation tying the source domain to Drive is still missing.
-The script's exact link-conversion, exclusion, storage, cookie and downstream
-request behavior is also unverified. Do not treat the dashboard attributes,
-including `data-cmp-ab="2"`, as evidence of visitor consent.
+The shared `app/layout.tsx` head mounts one `TravelpayoutsDrive` component.
+`next/script` uses a stable ID and `afterInteractive`. The user-provided bootstrap
+creates one asynchronous source script in document.head:
 
-Next.js integration guidance was checked in the installed official docs:
-`node_modules/next/dist/docs/01-app/02-guides/scripts.md` and
-`node_modules/next/dist/docs/01-app/03-api-reference/02-components/script.md`.
-Next.js deduplicates stable-ID layout scripts; the bootstrap additionally guards
-its own source element. No caller controls its URL or marker.
+`https://emrldco.com/NTk4NDE3.js?t=598417`
 
-## Default and review gates
+Markdown link formatting was removed from the supplied source value. The public
+marker is installation configuration, not a private API credential. Dashboard
+optimizer attributes and `data-cmp-ab="2"` are preserved. That attribute is not
+interpreted as visitor consent.
 
-`TRAVELPAYOUTS_DRIVE_ENABLED=false` is the default. Only the exact server-side
-value `true` requests activation. No public/query/local-storage enable switch is
-accepted. `lib/travelpayouts-drive-config.ts` additionally keeps source verification,
-attribution protection, privacy review and visitor consent **false**. Therefore
-setting the flag alone cannot activate unverified vendor code.
+Before insertion the bootstrap checks both its fixed source-element ID and every
+existing script's exact resolved source URL. Therefore an already-installed copy
+without our ID is also recognized. Next.js deduplicates the wrapper across SPA
+navigation. Do not paste another copy into a page, tag manager or Vercel setting.
+Removing a script after execution cannot undo its listeners or processing; an
+operator disable requires a fresh document after the configuration update.
 
-The current app has no Drive consent-manager integration. No consent UI was
-invented, and no consent is presumed. No vendor preload/preconnect is added.
-The component renders nothing while any gate is false.
+## Verification limits
 
-## Attribution and sensitive routes
+Cloud proxy read-only checks of `support.travelpayouts.com`,
+`www.travelpayouts.com` and `emrldco.com` returned CONNECT HTTP403. Independent
+confirmation that the exact domain is officially authorized remains unavailable.
+The dashboard-provided snippet is the owner's requested source. Network policy
+has not been changed or bypassed. Downstream endpoints, cookies/storage, data
+fields, retention periods and real conversion attribution remain unverified.
 
-Existing approved affiliate configuration, allowlists and `/out/...` redirects
-are unchanged. The script host is not a booking-destination allowlist entry.
-Merely loading third-party JavaScript in the root layout would give it access
-to links and forms on that document. Our secure redirect handler cannot stop a
-vendor click listener from replacing or bypassing a link in the browser.
+Existing affiliate destinations, tracking parameters, server redirects, booking
+allowlists and transaction guards are unchanged. Our bootstrap does not modify
+anchors. However, arbitrary third-party JavaScript can alter links or intercept
+clicks; the vendor's actual exclusion/attribution behavior cannot be guaranteed
+by mock tests. Obtain official documentation and verify this behavior with
+Travelpayouts. If exclusions are required, implement their documented mechanism
+or a separately reviewed isolated surface; route-based tag removal is insufficient
+once a script has executed in an SPA.
 
-Do not enable Drive until official exclusion behavior has been verified and
-implemented for other providers, already-attributed links, internal handoffs,
-contact/newsletter fields, accounts and booking references. Removing a script tag
-on SPA navigation does not remove its listeners or observers. If verified vendor
-exclusions cannot meet these requirements, use a separately reviewed isolated
-document/surface with full-document transitions instead of enabling it globally.
+## Testing
 
-## Privacy and cookies before activation
+The normal Playwright server explicitly sets `TRAVELPAYOUTS_DRIVE_ENABLED=false`
+and uses isolated affiliate fixtures. Use `npm run test:e2e` (development server),
+or build with the flag false before testing a production server with that flag.
 
-Obtain current official documentation identifying the controller/processors,
-purposes, data fields, cookie/storage identifiers, lifetimes, recipients,
-international transfers and downstream domains. Determine applicable consent and
-disclosure requirements with the site owner/legal reviewer. Connect an actual
-consent manager so optional processing begins only after the relevant choice,
-and test withdrawal and fresh-document behavior. Update the privacy and cookies
-pages with verified details; the present notices deliberately make no claims about
-unknown cookies or lifetimes. No private keys are needed for this supplied tag.
+Bootstrap tests intercept the exact source request with a locally authored
+counter stub. They test once-only insertion, pre-existing-script detection, and
+unchanged anchors without executing vendor code. A production-enabled integration
+check must likewise intercept the vendor URL to verify actual Next.js insertion
+and SPA navigation safely. Stub tests do not establish live vendor compatibility.
 
-## Activation procedure (not performed)
-
-1. Obtain accessible official confirmation for the exact domain and dashboard tag.
-2. Review vendor code/behavior in an approved isolated test environment and verify
-   consent, attribution exclusions, link preservation and downstream destinations.
-3. Implement the verified exclusion/isolated-surface and consent integration.
-   Only then may a reviewed code change release the currently false review gates.
-4. Approve any needed Cloud network destinations through environment settings;
-   no network policy or booking allowlist was changed by this integration.
-5. After deployment approval, set the server flag to `true` in the selected
-   environment and rebuild/restart. Next.js static layouts can capture this flag
-   during build, so an environment edit alone is not a guaranteed runtime toggle.
-6. To disable, set it to `false` and rebuild/restart without removing code.
-   Already-open documents need a fresh navigation/reload; removing the element
-   cannot undo vendor processing that has already run.
-
-Tests execute only our bootstrap with an intercepted, locally authored stub.
-They prove duplicate prevention and our code's non-interference, **not** live
-vendor ownership, real conversion attribution or vendor exclusion behavior.
-Hotelbeds and Stripe transaction guards remain unchanged and disabled.
+Hotelbeds direct transactions and Stripe remain disabled independently of Drive.
+No private API keys are needed for this supplied script.

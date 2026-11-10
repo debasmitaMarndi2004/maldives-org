@@ -13,7 +13,7 @@ const dashboardAttributes = {
   "data-cmp-ab": "2",
 };
 
-/** Loaded once by Next.js, after hydration, only after every review/consent gate. */
+/** Owner-enabled, loaded once by Next.js after hydration; false disables it. */
 export function TravelpayoutsDrive({ permissions }: { permissions: DrivePermissions }) {
   if (!canLoadTravelpayoutsDrive(permissions)) return null;
 

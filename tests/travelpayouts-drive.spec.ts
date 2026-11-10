@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import {
   canLoadTravelpayoutsDrive,
+  isTravelpayoutsDriveEnabled,
   TRAVELPAYOUTS_DRIVE_BOOTSTRAP,
   TRAVELPAYOUTS_DRIVE_ID,
   TRAVELPAYOUTS_DRIVE_SOURCE,
@@ -12,31 +13,13 @@ import { approvedAffiliateFixtures } from "./fixtures/affiliate-links";
 // These tests never download or execute the unverified vendor script. The
 // isolated bootstrap test substitutes a local counter; it verifies our loader,
 // not vendor link rewriting, privacy behavior, or an enabled Next.js deployment.
-const granted: DrivePermissions = {
-  enabled: true,
-  sourceVerified: true,
-  attributionProtectionVerified: true,
-  privacyReviewed: true,
-  consentGranted: true,
-};
-
-test("Drive loading fails closed unless every explicit permission is granted", () => {
+test("Drive is owner-enabled by default and supports an explicit disable switch", () => {
+  expect(isTravelpayoutsDriveEnabled(undefined)).toBe(true);
+  expect(isTravelpayoutsDriveEnabled("true")).toBe(true);
+  for (const value of ["false", "", "TRUE", "1", "invalid"]) expect(isTravelpayoutsDriveEnabled(value)).toBe(false);
+  expect(canLoadTravelpayoutsDrive({ enabled: true })).toBe(true);
+  expect(canLoadTravelpayoutsDrive({ enabled: false })).toBe(false);
   expect(canLoadTravelpayoutsDrive({} as DrivePermissions)).toBe(false);
-  expect(canLoadTravelpayoutsDrive({
-    enabled: false,
-    sourceVerified: false,
-    attributionProtectionVerified: false,
-    privacyReviewed: false,
-    consentGranted: false,
-  })).toBe(false);
-  expect(canLoadTravelpayoutsDrive(granted)).toBe(true);
-
-  for (const permission of Object.keys(granted) as (keyof DrivePermissions)[]) {
-    expect(canLoadTravelpayoutsDrive({ ...granted, [permission]: false }), permission).toBe(false);
-    const missing: Partial<DrivePermissions> = { ...granted };
-    delete missing[permission];
-    expect(canLoadTravelpayoutsDrive(missing as DrivePermissions), `missing ${permission}`).toBe(false);
-  }
 });
 
 test("disabled application emits no Drive script, resource hints, or vendor request across navigation", async ({ page }) => {
@@ -110,4 +93,22 @@ test("disabled Drive leaves approved competing affiliate handoffs intact", async
     expect([302, 303, 307]).toContain(response.status());
     expect(response.headers().location).toBe(fixture.url);
   }
+});
+
+test("an existing source without our ID prevents a second Drive installation", async ({ page }) => {
+  let requests = 0;
+  await page.route("**/*", async (route) => {
+    if (route.request().url() !== TRAVELPAYOUTS_DRIVE_SOURCE) {
+      await route.abort("blockedbyclient");
+      return;
+    }
+    requests += 1;
+    await route.fulfill({ status: 200, contentType: "application/javascript", body: "window.__existingDriveStub = true;" });
+  });
+  await page.setContent("<main>Isolated duplicate-source check</main>");
+  await page.addScriptTag({ url: TRAVELPAYOUTS_DRIVE_SOURCE });
+  await page.addScriptTag({ content: TRAVELPAYOUTS_DRIVE_BOOTSTRAP });
+  await page.addScriptTag({ content: TRAVELPAYOUTS_DRIVE_BOOTSTRAP });
+  await expect(page.locator(`script[src="${TRAVELPAYOUTS_DRIVE_SOURCE}"]`)).toHaveCount(1);
+  expect(requests).toBe(1);
 });
