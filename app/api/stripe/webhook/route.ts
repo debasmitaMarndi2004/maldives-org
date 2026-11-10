@@ -1,7 +1,9 @@
+import { directTransactionsDisabled, disabledTransactionResponse } from "@/lib/transaction-policy";
 import { getStripeClient } from "@/lib/stripe-server";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
 
 export async function POST(request: Request) {
+  if (directTransactionsDisabled()) return disabledTransactionResponse("payment");
   const stripe = getStripeClient();
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
   const signature = request.headers.get("stripe-signature");

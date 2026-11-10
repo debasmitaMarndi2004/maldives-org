@@ -25,6 +25,14 @@ export default async function StayPage({
   const checkIn = firstParam(params.checkIn);
   const checkOut = firstParam(params.checkOut);
   const codes = getConfiguredHotelCodes();
+  const where = firstParam(params.where);
+  const initialQuery = firstParam(params.q) || (where && where !== "Maldives" ? where.replace(/\s+Atoll$/i, "") : "");
+  const initialStyle = firstParam(params.style) || "";
+  const directory = <StayDirectory key={`${initialQuery}:${initialStyle}`} initialQuery={initialQuery} initialStyle={initialStyle} />;
+  const guestValue = (key: string, fallback: number, min: number, max: number) => {
+    const value = Number(firstParam(params[key]) ?? fallback);
+    return Number.isInteger(value) && value >= min && value <= max ? value : fallback;
+  };
 
   if (
     !isIsoDate(checkIn) ||
@@ -32,7 +40,7 @@ export default async function StayPage({
     new Date(checkOut) <= new Date(checkIn) ||
     codes.length === 0
   ) {
-    return <StayDirectory />;
+    return directory;
   }
 
   let liveStays: HotelbedsLiveStay[] = [];
@@ -41,9 +49,9 @@ export default async function StayPage({
     const response = await searchHotelAvailability({
       checkIn,
       checkOut,
-      adults: 2,
-      children: 0,
-      rooms: 1,
+      adults: guestValue("adults", 2, 1, 12),
+      children: guestValue("children", 0, 0, 12),
+      rooms: guestValue("rooms", 1, 1, 8),
       hotelCodes: codes,
     });
     liveStays = response.response.ok
@@ -57,5 +65,5 @@ export default async function StayPage({
     return <HotelbedsLiveResults stays={liveStays} checkIn={checkIn} checkOut={checkOut} />;
   }
 
-  return <StayDirectory />;
+  return directory;
 }

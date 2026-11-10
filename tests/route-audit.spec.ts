@@ -48,7 +48,9 @@ test("all public routes render without a server error", async ({ page }) => {
   for (const route of routes) {
     const response = await page.goto(route, { waitUntil: "domcontentloaded" });
     expect(response?.status(), route).toBe(200);
-    await expect(page.locator("main"), route).toBeVisible();
+    // Ignore hidden streaming copies while requiring one accessible main region.
+    await expect(page.getByRole("main"), route).toHaveCount(1);
+    await expect(page.getByRole("main"), route).toBeVisible();
   }
 
   expect(missingResources).toEqual([]);

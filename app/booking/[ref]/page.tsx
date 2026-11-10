@@ -1,7 +1,11 @@
+import { directTransactionsDisabled } from "@/lib/transaction-policy";
 import Link from "next/link";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
 
 export default async function BookingReferencePage({ params }: { params: Promise<{ ref: string }> }) {
+  if (directTransactionsDisabled()) {
+    return <main className="page-main"><div className="page-wrap content-page"><div className="detail-card"><span className="eyebrow">PARTNER BOOKING</span><h1>Manage your booking with its provider.</h1><p>Booking records and vouchers are not available on Maldives.org during this affiliate MVP. Use the confirmation sent by your booking provider. This page does not confirm or create a reservation.</p><Link className="button button-teal" href="/stay">Explore stays</Link></div></div></main>;
+  }
   const { ref } = await params;
   const supabase = getSupabaseAdmin();
   let booking: { offer_title: string; status: string; currency: string; price_from_usd: number | null; supplier_reference: string | null; voucher_url: string | null } | null = null;

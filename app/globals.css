@@ -496,3 +496,40 @@ html.motion-ready [data-reveal].is-visible { opacity: 1; transform: none; }
   .pax-grid, .certification-grid, .voucher-grid { grid-template-columns: 1fr; }
   .certification-intro, .voucher-topline { flex-direction: column; }
 }
+
+/* Original local artwork keeps remote-photo failures legible without presenting
+   the illustration as a property photograph. Existing source URLs are retained. */
+:root { --media-fallback: url("/images/island-fallback.svg"); }
+.stay-image, .experience-tile, .detail-hero-image, .article-image,
+.deal-card, .compare-thumb, .booking-summary-image, .escape-card::before {
+  background-color: #0f6470;
+}
+:is([data-media-state="loading"], [data-media-state="fallback"]):is(.stay-image, .experience-tile,
+.detail-hero-image, .article-image, .deal-card, .compare-thumb, .booking-summary-image),
+.escape-card:is([data-media-state="loading"], [data-media-state="fallback"])::before {
+  background-image: linear-gradient(180deg, rgba(5, 39, 47, .04), rgba(5, 39, 47, .2)), var(--media-fallback) !important;
+  background-size: cover;
+  background-position: center;
+}
+img[data-media-state="fallback"] { object-fit: cover; background-color: #0f6470; }
+
+/* Affiliate discovery and keyboard access preserve the existing palette. */
+:where(a, button, input, select, textarea):focus-visible { outline: 3px solid var(--teal-dark); outline-offset: 4px; }
+.skip-link { position: fixed; z-index: 100; left: 16px; top: 12px; transform: translateY(-160%); padding: 12px 18px; border-radius: 12px; color: #fff; background: var(--navy); }
+.skip-link:focus { transform: none; }
+.affiliate-action { margin-top: 18px; padding-top: 14px; border-top: 1px solid #dfecee; }
+.affiliate-action-compact { margin-top: 12px; padding-top: 10px; }
+.affiliate-status, .affiliate-disclosure, .affiliate-provider-labels, .currency-note { font-size: 11px; line-height: 1.6; color: var(--ink-muted); }
+.affiliate-status { margin: 0 0 8px; }
+.affiliate-partner + .affiliate-partner { margin-top: 12px; }
+.affiliate-partner .eyebrow { display: block; margin-bottom: 7px; letter-spacing: .08em; }
+.affiliate-partner .button { padding: 12px 15px; }
+.affiliate-action .text-link { font-size: 11px; }
+.affiliate-retry { display: block; border: 0; background: transparent; padding: 8px 0; margin-top: 6px; }
+.experience-tile .affiliate-action { border-color: rgba(255,255,255,.3); }
+.experience-tile .affiliate-status, .experience-tile .affiliate-disclosure, .experience-tile .affiliate-action .text-link, .experience-tile .affiliate-partner .eyebrow { color: #fff; }
+button:disabled { cursor: not-allowed; opacity: .7; }
+button[aria-busy="true"] { cursor: progress; }
+.currency-note { margin: 8px 0; }
+.partner-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+@media (max-width: 640px) { .partner-grid { grid-template-columns: 1fr; } .affiliate-partner .button { min-height: 44px; } }

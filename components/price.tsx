@@ -11,6 +11,6 @@ export function Price({
   suffix?: string;
   className?: string;
 }) {
-  const { formatPrice } = useCurrency();
-  return <span className={className}>{formatPrice(usd)}{suffix ? ` ${suffix}` : ""}</span>;
+  const { formatPrice, isEstimated } = useCurrency();
+  return <span className={className} title={isEstimated ? "Planning estimate using fallback exchange rates; final price is set by the provider" : "Planning estimate; final price is set by the provider"}>{formatPrice(usd)}{suffix ? ` ${suffix}` : ""}</span>;
 }

@@ -1,3 +1,4 @@
+import { MediaFallback } from "@/components/media-fallback";
 import Link from "next/link";
 import { SupplierPrice } from "@/components/supplier-price";
 import { formatCancellationPolicy, type HotelbedsLiveStay } from "@/lib/hotelbeds-data";
@@ -61,6 +62,6 @@ export function HotelbedsLiveResults({
           </article>
         ))}
       </div>
-    </main>
+    <MediaFallback /></main>
   );
 }

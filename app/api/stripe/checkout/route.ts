@@ -1,7 +1,9 @@
+import { directTransactionsDisabled, disabledTransactionResponse } from "@/lib/transaction-policy";
 import { getStripeClient } from "@/lib/stripe-server";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
 
 export async function POST(request: Request) {
+  if (directTransactionsDisabled()) return disabledTransactionResponse("payment");
   const stripe = getStripeClient();
   if (!stripe) {
     return Response.json({ ok: false, message: "Stripe checkout is not configured yet." }, { status: 503 });

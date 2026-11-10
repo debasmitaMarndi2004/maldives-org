@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { fallbackRates, isCurrency, type Currency } from "@/lib/currency";
+import { fallbackRates, isCurrency, supportedCurrencies, type Currency } from "@/lib/currency";
 
 const STORAGE_KEY = "maldives.org.currency";
 
@@ -9,6 +9,7 @@ type CurrencyContextValue = {
   currency: Currency;
   rates: Record<Currency, number>;
   isLoading: boolean;
+  isEstimated: boolean;
   setCurrency: (currency: Currency) => void;
   convertFromUsd: (amount: number) => number;
   formatPrice: (amount: number) => string;
@@ -20,9 +21,13 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
   const [currency, setCurrencyState] = useState<Currency>("USD");
   const [rates, setRates] = useState<Record<Currency, number>>(fallbackRates);
   const [isLoading, setIsLoading] = useState(true);
+  const [isEstimated, setIsEstimated] = useState(true);
 
   useEffect(() => {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
+    let stored: string | null = null;
+    try { stored = window.localStorage.getItem(STORAGE_KEY); } catch { /* Currency selection still works when storage is unavailable. */ }
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 10000);
 
     let cancelled = false;
     if (isCurrency(stored)) {
@@ -31,27 +36,37 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
       }, 0);
     }
 
-    fetch("/api/currency/rates", { cache: "no-store" })
+    fetch("/api/currency/rates", { cache: "no-store", signal: controller.signal })
       .then(async (response) => {
         if (!response.ok) throw new Error("Currency rates unavailable");
-        return response.json() as Promise<{ rates?: Record<Currency, number> }>;
+        return response.json() as Promise<{ rates?: Record<Currency, number>; source?: string }>;
       })
       .then((payload) => {
-        if (!cancelled && payload.rates) setRates({ ...fallbackRates, ...payload.rates });
+        if (cancelled || !payload.rates) return;
+        const next = { ...fallbackRates };
+        for (const code of supportedCurrencies) {
+          const candidate = payload.rates[code];
+          if (Number.isFinite(candidate) && candidate > 0) next[code] = candidate;
+        }
+        setRates(next);
+        setIsEstimated(payload.source !== "open.er-api.com" || supportedCurrencies.some((code) => !Number.isFinite(payload.rates?.[code]) || Number(payload.rates?.[code]) <= 0));
       })
       .catch(() => undefined)
       .finally(() => {
+        window.clearTimeout(timeout);
         if (!cancelled) setIsLoading(false);
       });
 
     return () => {
       cancelled = true;
+      window.clearTimeout(timeout);
+      controller.abort();
     };
   }, []);
 
   const setCurrency = useCallback((nextCurrency: Currency) => {
     setCurrencyState(nextCurrency);
-    window.localStorage.setItem(STORAGE_KEY, nextCurrency);
+    try { window.localStorage.setItem(STORAGE_KEY, nextCurrency); } catch { /* Preference remains available for this page session. */ }
   }, []);
 
   const convertFromUsd = useCallback(
@@ -64,14 +79,14 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
       new Intl.NumberFormat("en-US", {
         style: "currency",
         currency,
-        maximumFractionDigits: currency === "INR" ? 0 : 0,
+        maximumFractionDigits: 0,
       }).format(convertFromUsd(amount)),
     [convertFromUsd, currency],
   );
 
   const value = useMemo(
-    () => ({ currency, rates, isLoading, setCurrency, convertFromUsd, formatPrice }),
-    [convertFromUsd, currency, formatPrice, isLoading, rates, setCurrency],
+    () => ({ currency, rates, isLoading, isEstimated, setCurrency, convertFromUsd, formatPrice }),
+    [convertFromUsd, currency, formatPrice, isLoading, isEstimated, rates, setCurrency],
   );
 
   return <CurrencyContext.Provider value={value}>{children}</CurrencyContext.Provider>;

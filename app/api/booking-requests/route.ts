@@ -89,7 +89,7 @@ export async function POST(request: Request) {
     }
 
     const notificationEmail = process.env.ADMIN_NOTIFICATION_EMAIL;
-    if (notificationEmail) {
+    if (persisted && notificationEmail) {
       await sendTransactionalEmail({
         to: notificationEmail,
         subject: `New Maldives.org request ${reference}`,
