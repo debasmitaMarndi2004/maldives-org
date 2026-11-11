@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowRight, SearchIcon } from "@/components/icons";
 import { filterTourIdeas, tourCategories } from "@/lib/tours/ideas";
 import { ActivityArt } from "./activity-art";
+import { ViatorWidget } from "./viator-widget";
 import styles from "./tours.module.css";
 
 export function ToursDiscovery({ initialQuery, initialCategory }: { initialQuery: string; initialCategory: string }) {
@@ -32,6 +33,7 @@ export function ToursDiscovery({ initialQuery, initialCategory }: { initialQuery
       <div><h1>Tours &amp; activities<br/>in the Maldives</h1><p>Find your kind of island adventure. Explore ideas for reef days, sunset sails and local island discoveries.</p><a href="#tour-ideas" className={styles.heroLink}>Explore activities <ArrowRight size={18}/></a></div>
       <ActivityArt tile={5} className={styles.heroArt} label="Illustrative sea turtle and coral reef"/>
     </section>
+    <ViatorWidget />
     <section className={`page-wrap ${styles.collection}`} id="tour-ideas" aria-label="Explore activity ideas">
       <div className={styles.controls}>
         <label className={styles.search}><SearchIcon size={19}/><span className="sr-only">Search activities</span><input type="search" placeholder="Search activities" maxLength={120} value={query} onChange={(e) => update(e.target.value, category)}/></label>

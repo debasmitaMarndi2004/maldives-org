@@ -16,6 +16,7 @@ const nextConfig = {
         ],
       },
       { source: "/flights/embed", headers: [{ key: "X-Frame-Options", value: "SAMEORIGIN" }, { key: "Content-Security-Policy", value: "frame-ancestors 'self'" }] },
+      { source: "/tours-and-activities/embed", headers: [{ key: "X-Frame-Options", value: "SAMEORIGIN" }, { key: "Content-Security-Policy", value: "frame-ancestors 'self'; base-uri 'none'; object-src 'none'" }] },
     ];
   },
 };

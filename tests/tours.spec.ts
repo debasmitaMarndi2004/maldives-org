@@ -1,5 +1,11 @@
 import { expect, test } from "@playwright/test";
 import { captureApplicationErrors } from "./browser-errors";
+import { VIATOR_WIDGET_SOURCE } from "../lib/viator-widget";
+
+// Keep editorial regressions independent of the live third-party widget network.
+test.beforeEach(async ({ page }) => {
+  await page.route(VIATOR_WIDGET_SOURCE, route => route.fulfill({ contentType: "application/javascript", body: "/* external widget omitted in editorial-only tests */" }));
+});
 
 for (const width of [360, 390, 412, 768, 1280]) {
   test(`dedicated tours page works at ${width}px without simulated booking`, async ({ page }) => {
