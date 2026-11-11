@@ -16,12 +16,14 @@ for (const width of [360, 390, 412, 768, 1280]) {
     await expect(page).toHaveURL(/\/tours-and-activities$/);
     await expect(page).toHaveTitle("Tours & Activities in the Maldives — Maldives.org");
     await expect(page.getByRole("heading", { name: "Tours & activities in the Maldives", exact: true })).toBeVisible();
+    await page.getByRole("main").getByText("Explore our activity ideas & planning guides", { exact: true }).click();
     await expect(page.getByRole("article")).toHaveCount(5);
-    await page.getByRole("button", { name: "Snorkelling", exact: true }).click();
+    await page.getByRole("group", { name: "Activity categories", exact: true }).getByRole("button", { name: "Snorkelling", exact: true }).click();
     await expect(page.getByRole("article")).toHaveCount(1);
     await expect(page.getByRole("heading", { name: "Reef snorkelling", exact: true })).toBeVisible();
     await page.reload();
-    await expect(page.getByRole("button", { name: "Snorkelling", exact: true })).toHaveAttribute("aria-pressed", "true");
+    await page.getByRole("main").getByText("Explore our activity ideas & planning guides", { exact: true }).click();
+    await expect(page.getByRole("group", { name: "Activity categories", exact: true }).getByRole("button", { name: "Snorkelling", exact: true })).toHaveAttribute("aria-pressed", "true");
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     await page.getByRole("link", { name: "Explore idea", exact: true }).click();
     await expect(page).toHaveURL(/\/tours-and-activities\/reef-snorkelling$/);
@@ -34,10 +36,11 @@ for (const width of [360, 390, 412, 768, 1280]) {
 
 test("tour search, empty state and reset preserve URL state", async ({ page }) => {
   await page.goto("/tours-and-activities");
+  await page.getByRole("main").getByText("Explore our activity ideas & planning guides", { exact: true }).click();
   const search = page.getByRole("searchbox", { name: "Search activities", exact: true });
   await search.fill("sunset");
   await expect(page.getByRole("article")).toHaveCount(1);
-  await expect(page).toHaveURL(/q=sunset/);
+  await expect(page).toHaveURL(/guideQ=sunset/);
   await search.fill("NO_MATCH_ACTIVITY");
   await expect(page.getByText("No activity ideas match these filters. Try another search or clear the category.")).toBeVisible();
   await page.getByRole("button", { name: "Show all activities", exact: true }).click();

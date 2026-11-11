@@ -37,6 +37,7 @@ for (const width of [360, 390, 412, 768, 1280]) {
     page.on("pageerror", error => errors.push(error.message));
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/tours-and-activities");
+    await page.getByRole("region", { name: "Find your Maldives experience", exact: true }).getByText("Use the original Viator widget instead", { exact: true }).click();
     await expect(page).toHaveTitle("Tours & Activities in the Maldives — Maldives.org");
     const section = page.getByRole("region", { name: "Explore Viator Experiences", exact: true });
     await expect(section.getByRole("status")).toContainText("Experiences provided by Viator");
@@ -45,7 +46,8 @@ for (const width of [360, 390, 412, 768, 1280]) {
     await expect(vendor.getByRole("heading")).toContainText("TEST FIXTURE");
     await expect(vendor.getByRole("link")).toHaveAttribute("href", bookingUrl);
     await expect(section).toContainText("Viator for booking and payment");
-    await page.getByRole("button", { name: "Snorkelling", exact: true }).click();
+    await page.getByRole("main").getByText("Explore our activity ideas & planning guides", { exact: true }).click();
+    await page.getByRole("group", { name: "Activity categories", exact: true }).getByRole("button", { name: "Snorkelling", exact: true }).click();
     await expect(page.getByRole("article")).toHaveCount(1);
     await expect(page.getByRole("heading", { name: "Reef snorkelling", exact: true })).toBeVisible();
     expect(count()).toBe(1);
@@ -60,11 +62,13 @@ test("client navigation and reload create exactly one installation per document 
   await page.goto("/");
   await expect(page.locator('iframe[title="Viator Maldives tours and activities"]')).toHaveCount(0);
   await page.getByRole("link", { name: "Explore Activities", exact: true }).click();
+  await page.getByRole("region", { name: "Find your Maldives experience", exact: true }).getByText("Use the original Viator widget instead", { exact: true }).click();
   const section = page.getByRole("region", { name: "Explore Viator Experiences", exact: true });
   await expect(section.getByRole("status")).toContainText("Experiences provided by Viator");
   expect(count()).toBe(1);
   await page.getByRole("link", { name: "Maldives.org home", exact: true }).click();
   await page.getByRole("link", { name: "Explore Activities", exact: true }).click();
+  await page.getByRole("region", { name: "Find your Maldives experience", exact: true }).getByText("Use the original Viator widget instead", { exact: true }).click();
   await expect(section.getByRole("status")).toContainText("Experiences provided by Viator");
   expect(count()).toBe(2);
   await section.getByRole("button", { name: "Reload Viator experiences", exact: true }).click();
@@ -78,10 +82,12 @@ test("client navigation and reload create exactly one installation per document 
 test("script failure has an accessible error and spoofed messages cannot activate it", async ({ page }) => {
   await page.route(VIATOR_WIDGET_SOURCE, route => route.abort());
   await page.goto("/tours-and-activities");
+    await page.getByRole("region", { name: "Find your Maldives experience", exact: true }).getByText("Use the original Viator widget instead", { exact: true }).click();
   const section = page.getByRole("region", { name: "Explore Viator Experiences", exact: true });
   await expect(section.getByRole("status")).toContainText("could not load");
   await page.evaluate(() => window.postMessage({ type: "maldives-viator-widget", ready: true, height: 500 }, location.origin));
   await expect(section.getByRole("status")).toContainText("could not load");
+  await page.getByRole("main").getByText("Explore our activity ideas & planning guides", { exact: true }).click();
   await expect(page.getByRole("article")).toHaveCount(5);
   await mockViator(page);
   await section.getByRole("button", { name: "Reload Viator experiences", exact: true }).click();
@@ -90,10 +96,12 @@ test("script failure has an accessible error and spoofed messages cannot activat
 
 test("a loaded script without rendered content times out rather than claiming inventory", async ({ page }) => {
   await page.route(VIATOR_WIDGET_SOURCE, route => route.fulfill({ contentType: "application/javascript", body: "/* no widget content */" }));
+  await page.clock.install();
   await page.goto("/tours-and-activities");
+    await page.getByRole("region", { name: "Find your Maldives experience", exact: true }).getByText("Use the original Viator widget instead", { exact: true }).click();
   const section = page.getByRole("region", { name: "Explore Viator Experiences", exact: true });
   await expect(section.getByRole("status")).toContainText("Loading");
-  await page.clock.install();
+  await page.frameLocator('iframe[title="Viator Maldives tours and activities"]').locator('script[src="https://www.viator.com/orion/partner/widget.js"]').waitFor({ state: "attached" });
   await page.clock.fastForward(26000);
   await expect(section.getByRole("status")).toContainText("could not load");
 });

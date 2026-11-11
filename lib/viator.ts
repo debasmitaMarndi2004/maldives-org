@@ -38,6 +38,7 @@ export async function viatorRequest<T>(path: string, init: RequestInit = {}) {
       headers,
       signal: controller.signal,
       cache: "no-store",
+      redirect: "error",
     });
     const rawBody = await response.text();
     let data: T | null = null;
