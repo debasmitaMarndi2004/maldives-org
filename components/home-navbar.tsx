@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { ChevronDown, CloseIcon, MenuIcon, SearchIcon, SunIcon } from "@/components/icons";
 import { useCurrency } from "@/components/currency-provider";
 import { experiences, guides, properties } from "@/lib/data";
+import { accommodations } from "@/lib/accommodations/catalog";
 import { supportedCurrencies } from "@/lib/currency";
 import styles from "./home-navbar.module.css";
 
@@ -50,7 +51,7 @@ export function HomeNavbar() {
   const { currency, setCurrency, isLoading, isEstimated } = useCurrency();
   const router = useRouter();
   const results = useMemo(() => {
-    const all = [...islandLinks, ...properties.map(p => ({ name: p.name, href: `/stay/${p.slug}` })), ...experiences.map(e => ({ name: e.name, href: `/experiences/${e.slug}` })), ...guides.map(g => ({ name: g.title, href: `/guides/${g.slug}` }))];
+    const all = [...islandLinks, ...accommodations.map(p => ({ name: p.name, href: `/stay/${p.slug}` })), ...properties.map(p => ({ name: p.name, href: `/stay/${p.slug}` })), ...experiences.map(e => ({ name: e.name, href: `/experiences/${e.slug}` })), ...guides.map(g => ({ name: g.title, href: `/guides/${g.slug}` }))];
     const term = normalize(query.trim());
     return (term ? all.filter(item => normalize(item.name).includes(term)) : islandLinks).slice(0, 6);
   }, [query]);

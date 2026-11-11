@@ -132,6 +132,7 @@ export async function hotelbedsRequest<T>(
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 20_000);
   let response: Response;
+  let rawBody: string;
   try {
     response = await fetch(`${config.baseUrl}${path}`, {
       ...init,
@@ -140,11 +141,12 @@ export async function hotelbedsRequest<T>(
       cache: "no-store",
       dispatcher: getMutualTlsAgent(),
     } as RequestInit & { dispatcher?: Agent });
+    // fetch resolves on headers; keep the timeout active while consuming a
+    // response body as well, otherwise a stalled supplier body never aborts.
+    rawBody = await response.text();
   } finally {
     clearTimeout(timeout);
   }
-  const rawBody = await response.text();
-
   let data: T | null = null;
   if (rawBody) {
     try {

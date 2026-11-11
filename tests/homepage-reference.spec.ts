@@ -51,7 +51,7 @@ test("header search finds an existing island and closes after navigation", async
   await dialog.getByRole("textbox", { name: "Search resorts, islands or experiences", exact: true }).fill("Male");
   await dialog.getByRole("navigation", { name: "Search suggestions", exact: true }).getByRole("link", { name: /^Malé(?:\s|↗|$)/ }).click();
   await expect(page).toHaveURL(/\/islands\/male$/);
-  await expect(page.getByRole("heading", { name: "Male", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Malé", exact: true })).toBeVisible();
   await expect(page.getByRole("dialog", { name: "Find your Maldives", exact: true })).toHaveCount(0);
 });
 

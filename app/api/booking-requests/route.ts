@@ -2,6 +2,7 @@ import { escapeHtml, sendTransactionalEmail } from "@/lib/notifications";
 import { createBookingReference } from "@/lib/references";
 import { getSupabaseAdmin } from "@/lib/supabase-admin";
 import { allowRequest, requestKey } from "@/lib/rate-limit";
+import { isCalendarDate, isValidDateRange } from "@/lib/calendar-date";
 
 function text(value: unknown, max = 500) {
   return typeof value === "string" ? value.trim().slice(0, max) : "";
@@ -9,10 +10,6 @@ function text(value: unknown, max = 500) {
 
 function validEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-}
-
-function validIsoDate(value: string) {
-  return /^\d{4}-\d{2}-\d{2}$/.test(value);
 }
 
 export async function POST(request: Request) {
@@ -38,10 +35,10 @@ export async function POST(request: Request) {
       !Number.isInteger(guests) ||
       guests < 1 ||
       guests > 50 ||
-      (checkIn && !validIsoDate(checkIn)) ||
-      (checkOut && !validIsoDate(checkOut)) ||
-      (activityDate && !validIsoDate(activityDate)) ||
-      (checkIn && checkOut && new Date(checkOut) <= new Date(checkIn)) ||
+      (checkIn && !isCalendarDate(checkIn)) ||
+      (checkOut && !isCalendarDate(checkOut)) ||
+      (activityDate && !isCalendarDate(activityDate)) ||
+      (checkIn && checkOut && !isValidDateRange(checkIn, checkOut)) ||
       !/^[A-Z]{3}$/.test(currency)
     ) {
       return Response.json(

@@ -24,7 +24,7 @@ export type HotelbedsLiveStay = {
   location: string;
   description: string;
   image: string;
-  rating: number;
+  rating: number | null;
   price: number;
   currency: string;
   supplierCode: string;
@@ -143,7 +143,7 @@ export function normalizeHotelbedsResults(data: unknown, image: string): Hotelbe
       location: textValue(hotel.destinationName ?? hotel.city, "Maldives"),
       description: textValue(hotel.categoryName, "Live Hotelbeds availability with room options for your dates."),
       image,
-      rating: numberValue(hotel.rating, 4.5) ?? 4.5,
+      rating: typeof hotel.rating === "number" || (typeof hotel.rating === "string" && hotel.rating.trim()) ? numberValue(hotel.rating) : null,
       price: rate.amount,
       currency: rate.currency,
       supplierCode: code,

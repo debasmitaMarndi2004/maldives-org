@@ -3,12 +3,9 @@ import {
   getHotelbedsConfig,
   searchHotelAvailability,
 } from "@/lib/hotelbeds";
+import { isCalendarDate, isValidDateRange } from "@/lib/calendar-date";
 
 export const dynamic = "force-dynamic";
-
-function isIsoDate(value: unknown): value is string {
-  return typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value);
-}
 
 function toInteger(value: unknown, fallback: number) {
   const parsed = Number(value);
@@ -33,9 +30,9 @@ export async function POST(request: Request) {
     );
 
     if (
-      !isIsoDate(checkIn) ||
-      !isIsoDate(checkOut) ||
-      new Date(checkOut) <= new Date(checkIn)
+      !isCalendarDate(checkIn) ||
+      !isCalendarDate(checkOut) ||
+      !isValidDateRange(checkIn, checkOut)
     ) {
       return Response.json(
         { ok: false, message: "Use valid check-in and check-out dates." },

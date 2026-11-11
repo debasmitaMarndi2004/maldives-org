@@ -47,7 +47,7 @@ export function HotelbedsLiveResults({
             <div className="stay-body">
               <div className="stay-meta">
                 <span>{stay.location}</span>
-                <span>★ {stay.rating.toFixed(1)}</span>
+                {stay.rating !== null && <span>★ {stay.rating.toFixed(1)}</span>}
               </div>
               <div className="card-source-row"><span className="source-badge source-hotelbeds"><span className="source-dot" />Hotelbeds</span></div>
               <h3>{stay.name}</h3>

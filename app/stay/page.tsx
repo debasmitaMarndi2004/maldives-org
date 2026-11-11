@@ -5,6 +5,7 @@ import { accommodationDirectoryMetadata } from "@/lib/accommodations/metadata";
 import { getConfiguredHotelCodes, searchHotelAvailability } from "@/lib/hotelbeds";
 import { normalizeHotelbedsResults } from "@/lib/hotelbeds-data";
 import { properties } from "@/lib/data";
+import { isCalendarDate, isValidDateRange } from "@/lib/calendar-date";
 
 export const dynamic = "force-dynamic";
 export const metadata = accommodationDirectoryMetadata();
@@ -13,10 +14,6 @@ type SearchParams = Record<string, string | string[] | undefined>;
 
 function firstParam(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value;
-}
-
-function isIsoDate(value: string | undefined): value is string {
-  return Boolean(value && /^\d{4}-\d{2}-\d{2}$/.test(value));
 }
 
 export default async function StayPage({
@@ -36,9 +33,9 @@ export default async function StayPage({
   };
 
   if (
-    !isIsoDate(checkIn) ||
-    !isIsoDate(checkOut) ||
-    new Date(checkOut) <= new Date(checkIn) ||
+    !isCalendarDate(checkIn) ||
+    !isCalendarDate(checkOut) ||
+    !isValidDateRange(checkIn, checkOut) ||
     codes.length === 0
   ) {
     return directory;

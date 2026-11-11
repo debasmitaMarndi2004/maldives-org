@@ -10,6 +10,8 @@ import { experiences, guides, properties, Property } from "@/lib/data";
 import { Price } from "@/components/price";
 import { useCurrency } from "@/components/currency-provider";
 import { AffiliateBookingAction } from "@/components/affiliate-booking-action";
+import { isCalendarDate, isValidDateRange } from "@/lib/calendar-date";
+import { filterSampleTransferRoutes, type SampleTransferRoute } from "@/lib/transfer-routes";
 
 function PageIntro({ eyebrow, title, description }: { eyebrow: string; title: string; description: string }) {
   return <section className="page-hero" data-reveal><div className="page-wrap page-heading"><span className="eyebrow">{eyebrow}</span><h1>{title}</h1><p>{description}</p></div></section>;
@@ -70,16 +72,72 @@ export function GuideDetail({ guide }: { guide: typeof guides[number] }) {
 }
 
 export function TransfersPage() {
-  const routes = [{ from: "Velana International Airport", to: "Maafushi", mode: "Shared speedboat", time: "35 min", price: 35, suffix: "", label: "" }, { from: "Velana International Airport", to: "Baa Atoll", mode: "Seaplane", time: "30 min", price: null, suffix: "", label: "Request" }, { from: "Malé", to: "Dhigurah", mode: "Public ferry", time: "4 h 30", price: 12, suffix: "", label: "" }, { from: "Velana International Airport", to: "North Malé Atoll", mode: "Private speedboat", time: "45 min", price: 220, suffix: "/ boat", label: "" }];
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
   const [searched, setSearched] = useState(false);
-  return <><PageIntro eyebrow="TRANSFERS" title="Make the journey part of the trip." description="Compare speedboats, public ferries and seaplanes by route, time and booking mode. Then arrive knowing what happens next." /><main className="page-main" data-reveal><div className="page-wrap"><div className="transfer-search detail-card"><div><span className="eyebrow">Route finder</span><h2>Where are you headed?</h2></div><div className="transfer-fields"><input className="input" placeholder="From · Airport or Malé" aria-label="Starting point" /><input className="input" placeholder="To · Island or resort" aria-label="Destination" /><button className="button button-teal" type="button" onClick={() => setSearched(true)}>{searched ? "Routes ready" : "Find a route"} <ArrowRight size={14} /></button></div>{searched && <div className="note-box route-note" role="status">We found sample routes below. Choose one to review timing, mode and booking notes.</div>}</div><div className="route-list">{routes.map((route) => <Link href="/transfers/airport-to-island" className="route-row" key={`${route.to}-${route.mode}`}><div><span className="eyebrow">{route.mode}</span><strong>{route.from} <span>→</span> {route.to}</strong></div><div><span>{route.time}</span><strong>{route.price === null ? route.label : <Price usd={route.price} suffix={route.suffix} />}</strong></div><ArrowUpRight size={15} /></Link>)}</div><div className="note-box route-note">Seaplanes operate in daylight and are request-only. Public ferry schedules can change seasonally — confirm the latest departure before travelling.</div></div><MediaFallback /></main></>;
+  const shown = filterSampleTransferRoutes(searched ? from : "", searched ? to : "");
+  function clearSearch() { setFrom(""); setTo(""); setSearched(false); }
+  return <><PageIntro eyebrow="TRANSFERS" title="Make the journey part of the trip." description="Explore sample speedboat, public ferry and seaplane routes. These planning examples are not confirmed schedules, live fares or bookable services." />
+    <main className="page-main" data-reveal><div className="page-wrap">
+      <div className="transfer-search detail-card"><div><span className="eyebrow">Route finder</span><h2>Where are you headed?</h2></div>
+        <form className="transfer-fields" onSubmit={(event) => { event.preventDefault(); setSearched(true); }}>
+          <input className="input" placeholder="From · Airport or Malé" aria-label="Starting point" value={from} maxLength={120} onChange={(event) => { setFrom(event.target.value); setSearched(false); }} />
+          <input className="input" placeholder="To · Island or resort" aria-label="Destination" value={to} maxLength={120} onChange={(event) => { setTo(event.target.value); setSearched(false); }} />
+          <button className="button button-teal" type="submit">Find a route <ArrowRight size={14} /></button>
+        </form>
+        {searched && <div className="note-box route-note" role="status">{shown.length ? `${shown.length} sample route${shown.length === 1 ? " matches" : "s match"} your search. Confirm timing and fares with an operator.` : "No sample routes match this search. Try another origin or destination."} <button type="button" className="text-link" onClick={clearSearch}>Clear route search</button></div>}
+      </div>
+      {shown.length ? <div className="route-list">{shown.map((route) => <Link href={`/transfers/${route.slug}`} className="route-row" key={route.slug}>
+        <div><span className="eyebrow">{route.mode} · Sample route</span><strong>{route.from} <span>→</span> {route.to}</strong></div>
+        <div><span>Sample duration · {route.time}</span><strong>{route.price === null ? "Fare unconfirmed" : <Price usd={route.price} suffix={route.suffix} />}</strong></div><ArrowUpRight size={15} />
+      </Link>)}</div> : <div className="empty-state"><p>No matching sample transfer is listed. This does not mean that an operator has no availability.</p></div>}
+      <div className="note-box route-note">All routes, durations and fares above are sample planning information. Seaplanes generally operate in daylight. Confirm the route, current timetable, fare and safety requirements with the transport provider. No transfer reservation is created here.</div>
+    </div><MediaFallback /></main>
+  </>;
+}
+
+export function TransferDetail({ route }: { route: SampleTransferRoute }) {
+  return <><PageIntro eyebrow="SAMPLE TRANSFER ROUTE" title={`${route.from} to ${route.to}`} description={`${route.mode}. A planning example, not a confirmed schedule, live fare or bookable transport service.`} />
+    <main className="page-main"><div className="page-wrap detail-layout"><section className="detail-card detail-overview"><h2>Review this route before you travel.</h2>
+      <div className="detail-list"><div><strong>Starting point</strong><span>{route.from}</span></div><div><strong>Destination</strong><span>{route.to}</span></div><div><strong>Transport idea</strong><span>{route.mode}</span></div><div><strong>Sample duration</strong><span>{route.time}</span></div><div><strong>Sample fare estimate</strong><span>{route.price === null ? "Not confirmed" : <Price usd={route.price} suffix={route.suffix} />}</span></div></div>
+      <p>Ask the operator to confirm the departure point, timetable, journey duration, baggage allowance, price and weather cancellation policy. These sample details do not confirm availability.</p>
+      <Link className="text-link" href="/transfers">Compare sample routes <ArrowRight size={14} /></Link>
+    </section><aside className="detail-card"><span className="eyebrow">EXTERNAL TRANSPORT PROVIDER</span><h2>Confirm directly with an operator.</h2><p>No approved transfer booking link is connected to this sample route. Reservations and payment must be completed with a verified transport provider.</p><button type="button" className="button button-teal full-button" disabled>Transfer booking unavailable</button></aside></div><MediaFallback /></main>
+  </>;
 }
 
 export function TripBuilder() {
   const [step, setStep] = useState(1);
   const [style, setStyle] = useState("Honeymoon");
+  const [arrival, setArrival] = useState("");
+  const [departure, setDeparture] = useState("");
+  const [travellers, setTravellers] = useState("2");
+  const [error, setError] = useState("");
   const styles = ["Honeymoon", "Family", "Budget", "Diving"];
-  return <><PageIntro eyebrow="PLAN YOUR TRIP" title="Build the Maldives that fits you." description="Answer a few questions and we’ll shape a first-pass trip around your dates, travel style, budget and arrival." /><main className="page-main"><div className="page-wrap trip-builder"><div className="builder-progress"><span className={step >= 1 ? "active" : ""}>01</span><i /><span className={step >= 2 ? "active" : ""}>02</span><i /><span className={step >= 3 ? "active" : ""}>03</span></div>{step === 1 && <div className="builder-step"><span className="eyebrow">First, the feeling</span><h2>What kind of trip are you imagining?</h2><div className="style-grid">{styles.map((item) => <button key={item} className={`style-option ${style === item ? "selected" : ""}`} onClick={() => setStyle(item)}><span>{item === "Honeymoon" ? "✦" : item === "Family" ? "◒" : item === "Budget" ? "⌁" : "◌"}</span>{item}<small>{item === "Honeymoon" ? "Private, slow, special" : item === "Family" ? "Easy days for everyone" : item === "Budget" ? "More island, less fuss" : "Reef-first adventures"}</small></button>)}</div><button className="button button-teal" onClick={() => setStep(2)}>Continue <ArrowRight size={14} /></button></div>}{step === 2 && <div className="builder-step"><span className="eyebrow">Now, the details</span><h2>When will you be travelling?</h2><div className="builder-fields"><label className="field-label">Arrival date<input className="input" type="date" /></label><label className="field-label">Departure date<input className="input" type="date" /></label><label className="field-label">Travellers<select className="input" defaultValue="2"><option>2 travellers</option><option>3 travellers</option><option>4 travellers</option><option>5+ travellers</option></select></label></div><div className="builder-actions"><button className="button button-ghost button-dark" onClick={() => setStep(1)}>Back</button><button className="button button-teal" onClick={() => setStep(3)}>Show my trip <ArrowRight size={14} /></button></div></div>}{step === 3 && <div className="builder-step"><span className="eyebrow">Your first pass</span><h2>A {style.toLowerCase()} escape, starting here.</h2><div className="suggestion-plan"><div><span className="eyebrow">Stay</span><strong>{style === "Budget" ? "Coral Garden House" : "Overwater Romance"}</strong><p>South Ari · <Price usd={style === "Budget" ? 92 : 480} suffix="/ night" /></p></div><div><span className="eyebrow">Transfer</span><strong>{style === "Budget" ? "Public ferry" : "Seaplane"}</strong><p>Route matched to your island</p></div><div><span className="eyebrow">Experience</span><strong>{style === "Diving" ? "Dive with manta rays" : "Sunset cruise"}</strong><p>Add it to your itinerary</p></div></div><div className="builder-actions"><button className="button button-ghost button-dark" onClick={() => setStep(2)}>Back</button><Link className="button button-sun" href="/stay">Browse matching stays <ArrowRight size={14} /></Link></div></div>}</div><MediaFallback /></main></>;
+  const partySizes = ["2", "3", "4", "5+"];
+  function showTrip(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!isCalendarDate(arrival) || !isCalendarDate(departure)) { setError("Enter valid arrival and departure dates."); return; }
+    if (!isValidDateRange(arrival, departure)) { setError("Departure must be after arrival."); return; }
+    if (!partySizes.includes(travellers)) { setError("Choose the number of travellers."); return; }
+    setError(""); setStep(3);
+  }
+  return <><PageIntro eyebrow="PLAN YOUR TRIP" title="Build the Maldives that fits you." description="Choose your travel style and dates to make a first-pass planning preview. These preferences do not search live inventory or create a reservation." />
+    <main className="page-main"><div className="page-wrap trip-builder">
+      <div className="builder-progress"><span className={step >= 1 ? "active" : ""} aria-current={step === 1 ? "step" : undefined}>01</span><i /><span className={step >= 2 ? "active" : ""} aria-current={step === 2 ? "step" : undefined}>02</span><i /><span className={step >= 3 ? "active" : ""} aria-current={step === 3 ? "step" : undefined}>03</span></div>
+      {step === 1 && <div className="builder-step"><span className="eyebrow">First, the feeling</span><h2>What kind of trip are you imagining?</h2><div className="style-grid">{styles.map((item) => <button type="button" key={item} className={`style-option ${style === item ? "selected" : ""}`} aria-pressed={style === item} onClick={() => setStyle(item)}><span>{item === "Honeymoon" ? "✦" : item === "Family" ? "◒" : item === "Budget" ? "⌁" : "◌"}</span>{item}<small>{item === "Honeymoon" ? "Private, slow, special" : item === "Family" ? "Easy days for everyone" : item === "Budget" ? "More island, less fuss" : "Reef-first adventures"}</small></button>)}</div><button type="button" className="button button-teal" onClick={() => setStep(2)}>Continue <ArrowRight size={14} /></button></div>}
+      {step === 2 && <form className="builder-step" noValidate onSubmit={showTrip}><span className="eyebrow">Now, the details</span><h2>When will you be travelling?</h2><div className="builder-fields">
+        <label className="field-label">Arrival date<input className="input" type="date" value={arrival} required aria-describedby={error ? "trip-details-error" : undefined} aria-invalid={Boolean(error) && !isValidDateRange(arrival, departure)} onChange={(event) => { setArrival(event.target.value); setError(""); }} /></label>
+        <label className="field-label">Departure date<input className="input" type="date" value={departure} required aria-describedby={error ? "trip-details-error" : undefined} aria-invalid={Boolean(error) && !isValidDateRange(arrival, departure)} onChange={(event) => { setDeparture(event.target.value); setError(""); }} /></label>
+        <label className="field-label">Travellers<select className="input" aria-label="Travellers" value={travellers} onChange={(event) => { setTravellers(event.target.value); setError(""); }}>{partySizes.map((size) => <option key={size} value={size}>{size} travellers</option>)}</select></label>
+      </div>{error && <p id="trip-details-error" className="note-box" role="alert">{error}</p>}<div className="builder-actions"><button type="button" className="button button-ghost button-dark" onClick={() => { setError(""); setStep(1); }}>Back</button><button type="submit" className="button button-teal">Show my trip <ArrowRight size={14} /></button></div></form>}
+      {step === 3 && <div className="builder-step"><span className="eyebrow">Your first pass · Sample planning ideas</span><h2>A {style.toLowerCase()} escape, starting here.</h2>
+        <div className="note-box" role="status"><strong>Your planning preferences</strong><p>Arrival: <time dateTime={arrival}>{arrival}</time> · Departure: <time dateTime={departure}>{departure}</time> · {travellers} travellers.</p><p>These sample ideas are not date-specific availability, confirmed routes or a booked itinerary.</p></div>
+        <div className="suggestion-plan"><div><span className="eyebrow">Sample stay idea</span><strong>{style === "Budget" ? "Coral Garden House" : "Overwater Romance"}</strong><p>Sample estimate · <Price usd={style === "Budget" ? 92 : 480} suffix="/ night" /></p></div><div><span className="eyebrow">Sample transfer idea</span><strong>{style === "Budget" ? "Public ferry" : "Seaplane"}</strong><p>Route and timetable require confirmation</p></div><div><span className="eyebrow">Sample experience idea</span><strong>{style === "Diving" ? "Dive with manta rays" : "Sunset cruise"}</strong><p>Not an operator-confirmed tour</p></div></div>
+        <div className="builder-actions"><button type="button" className="button button-ghost button-dark" onClick={() => setStep(2)}>Back</button><Link className="button button-sun" href="/stay">Browse stays <ArrowRight size={14} /></Link></div>
+      </div>}
+    </div><MediaFallback /></main>
+  </>;
 }
 
 export function ContentPage({ eyebrow, title, description, children }: { eyebrow: string; title: string; description: string; children: React.ReactNode }) { return <><PageIntro eyebrow={eyebrow} title={title} description={description} /><main className="page-main" data-reveal><div className="page-wrap content-page">{children}</div><MediaFallback /></main></>; }
