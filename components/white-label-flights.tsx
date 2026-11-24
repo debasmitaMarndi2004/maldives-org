@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { whiteLabelQuery } from "@/lib/white-label";
+import { TravelLoading } from "./travel-loading";
 
 const subscribe = () => () => {};
 
@@ -32,7 +33,10 @@ function WhiteLabelFrame({query}:{query:string}){
   return()=>{window.clearTimeout(timeout);window.removeEventListener("message",receive);};
  },[]);
  return <div className="white-label-frame" data-state={state}>
- {state!=="ready"&&<p role="status">{state==="loading"?"Loading Aviasales flight search…":"Flight search could not load. Please refresh the page or try again later."}</p>}
+ <div role="status">
+  {state==="loading"&&<TravelLoading placement="inline" message="Loading Aviasales flight search…"/>}
+  {state==="unavailable"&&<p>Flight search could not load. Please refresh the page or try again later.</p>}
+ </div>
  {hydrated&&<iframe ref={frame} title="Aviasales search and flight results" src={`/flights/embed${query?`?${query}`:""}`} style={{height}} hidden={state==="unavailable"} referrerPolicy="strict-origin-when-cross-origin" />}
  </div>;
 }

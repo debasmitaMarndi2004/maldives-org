@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, SearchIcon } from "@/components/icons";
+import { TravelLoading } from "@/components/travel-loading";
 import { parseTourFilters, VIATOR_PAGE_SIZE, viatorCategories, viatorCurrencies, type TourFilters, type TourResults, type ViatorTour } from "@/lib/tours/viator-data";
 import { ViatorPhoto } from "./viator-photo";
 import { ViatorWidget } from "./viator-widget";
@@ -79,7 +80,14 @@ export function ViatorTours({ initialFilters }: { initialFilters: TourFilters })
       </div>
       {validation && <p role="alert">{validation}</p>}
     </form>
-    <div className={styles.results}><p role="status" aria-live="polite">{loading ? "Searching Viator tours…" : remote.error ? remote.error : data?.sandbox ? "Sandbox test data — not live inventory or bookable offers" : `${data?.total !== null && data?.total !== undefined ? `${data.total} tours match` : "Viator tours"} · page ${filters.page} · ${filters.currency}`}</p><button type="button" onClick={reset}>Clear tour filters</button></div>
+    <div className={styles.results}>
+      <div role="status">
+        {loading
+          ? <TravelLoading placement="inline" message="Searching Viator tours…" />
+          : <p>{remote.error ? remote.error : data?.sandbox ? "Sandbox test data — not live inventory or bookable offers" : `${data?.total !== null && data?.total !== undefined ? `${data.total} tours match` : "Viator tours"} · page ${filters.page} · ${filters.currency}`}</p>}
+      </div>
+      <button type="button" onClick={reset}>Clear tour filters</button>
+    </div>
     {!loading && remote.error && <div className={styles.empty}><h3>Tour search is unavailable right now.</h3><p>The activity guides and original Viator widget remain available below.</p><button type="button" onClick={() => setAttempt(value => value + 1)}>Retry tour search</button></div>}
     {data && !data.tours.length && <div className={styles.empty}><h3>No tours match these filters.</h3><p>Try another activity, category or budget.</p><button type="button" onClick={reset}>Show all tours</button></div>}
     {data && data.tours.length > 0 && <div className={`${styles.grid} ${styles.nativeGrid}`}>{data.tours.map(tour => <article className={styles.card} key={tour.code}>

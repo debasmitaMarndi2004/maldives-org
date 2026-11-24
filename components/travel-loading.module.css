@@ -1,0 +1,171 @@
+.route,
+.initial,
+.navigation {
+  display: grid;
+  place-items: center;
+}
+
+.route {
+  min-height: max(22rem, 65svh);
+  padding: 7rem 1rem 3rem;
+  background: radial-gradient(ellipse at center, #fff 0%, var(--soft) 75%);
+}
+
+.route .card {
+  animation: reveal 180ms step-end both;
+}
+
+.initial,
+.navigation {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  padding: 1rem;
+  pointer-events: none;
+}
+
+.initial {
+  /* Show during slow hydration and release the screen if startup scripts fail. */
+  animation: reveal 1ms step-end 180ms both, expire 1ms step-end 10s forwards;
+}
+
+:global(body):has([data-site-loading="route"], [data-site-loading="inline"]) .initial,
+:global(body):has([data-site-loading="route"]) .navigation {
+  display: none;
+}
+
+.card {
+  display: grid;
+  justify-items: center;
+  gap: 0.85rem;
+  max-width: 100%;
+  padding: 1.25rem 1.5rem 1.15rem;
+  border: 1px solid #cde7e8;
+  border-radius: 1.5rem;
+  color: var(--navy);
+  background: #fff;
+  box-shadow: 0 12px 36px rgb(10 42 51 / 12%);
+}
+
+.scene {
+  display: flex;
+  gap: clamp(0.45rem, 2vw, 0.8rem);
+}
+
+.stage {
+  --stage-size: clamp(2.8rem, 15vw, 3.75rem);
+  display: grid;
+  place-items: center;
+  width: var(--stage-size);
+  height: var(--stage-size);
+  border-radius: 50%;
+  background: #e8f7fb;
+}
+
+.stage:nth-child(2) {
+  background: #e0f6f2;
+}
+
+.stage:nth-child(3) {
+  background: #fcf1db;
+}
+
+.art {
+  width: calc(var(--stage-size) * 0.88);
+  height: auto;
+  animation: bob 1.65s ease-in-out infinite;
+}
+
+.stage:nth-child(2) .art {
+  animation-delay: 150ms;
+}
+
+.stage:nth-child(3) .art {
+  animation-delay: 300ms;
+}
+
+.message {
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.track {
+  width: 6rem;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #dcedee;
+}
+
+.track::after {
+  display: block;
+  width: 40%;
+  height: 100%;
+  border-radius: inherit;
+  background: #0e8fa0;
+  animation: progress 1.65s ease-in-out infinite alternate;
+  content: "";
+}
+
+.inline .card {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.6rem;
+  padding: 0.4rem 0.7rem;
+  border-radius: 0.75rem;
+  background: var(--soft);
+  box-shadow: none;
+}
+
+.inline .scene {
+  gap: 0.25rem;
+}
+
+.inline .stage {
+  --stage-size: 1.75rem;
+}
+
+.inline .message {
+  font-size: 0.8125rem;
+  text-align: start;
+}
+
+.inline .track {
+  display: none;
+}
+
+@keyframes reveal {
+  from { visibility: hidden; }
+  to { visibility: visible; }
+}
+
+@keyframes expire {
+  from { visibility: visible; }
+  to { visibility: hidden; }
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  45% { transform: translateY(-5px); }
+}
+
+@keyframes progress {
+  from { transform: translateX(0); }
+  to { transform: translateX(150%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .art,
+  .track::after {
+    animation: none;
+  }
+}
+
+@media (scripting: none) {
+  .initial {
+    display: none;
+  }
+}

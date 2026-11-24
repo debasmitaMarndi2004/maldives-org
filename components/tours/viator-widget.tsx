@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { VIATOR_WIDGET_MESSAGE } from "@/lib/viator-widget";
+import { TravelLoading } from "@/components/travel-loading";
 import styles from "./tours.module.css";
 
 const subscribe = () => () => {};
@@ -28,7 +29,11 @@ function ViatorFrame() {
     return () => { window.clearTimeout(timeout); window.removeEventListener("message", receive); };
   }, []);
   return <div className={styles.widgetFrame} data-viator-state={status}>
-    <p className={styles.widgetStatus} role="status" aria-live="polite">{status === "loading" ? "Loading Viator experiences…" : status === "unavailable" ? "Viator experiences could not load. Please retry, or explore our activity guides below. No booking has been made." : "Experiences provided by Viator. Check current details and availability on Viator."}</p>
+    <div className={styles.widgetStatus} role="status">
+      {status === "loading"
+        ? <TravelLoading placement="inline" message="Loading Viator experiences…" />
+        : status === "unavailable" ? "Viator experiences could not load. Please retry, or explore our activity guides below. No booking has been made." : "Experiences provided by Viator. Check current details and availability on Viator."}
+    </div>
     {hydrated && <iframe ref={frame} title="Viator Maldives tours and activities" src="/tours-and-activities/embed" style={{ height }} hidden={status === "unavailable"} referrerPolicy="strict-origin-when-cross-origin" />}
   </div>;
 }
