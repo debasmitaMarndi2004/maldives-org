@@ -1,2 +1,29 @@
-import { ContentPage } from "@/components/public-pages";
-export default function CookiesPage() { return <ContentPage eyebrow="LEGAL · FOR REVIEW" title="Cookies and similar tools." description="A professional template for legal review before public launch."><div className="detail-card"><h2>How cookies help</h2><p>Essential cookies keep the site working. Optional tracking and consent requirements depend on the services used and applicable law; the final policy and consent handling require review.</p><h2>Travelpayouts Drive</h2><p>Travelpayouts Drive is configured to load automatically. Its cookies, local storage, purposes and lifetimes have not yet been independently verified. This site does not currently provide a dedicated Drive consent manager. Script attributes and site-owner activation do not record your consent.</p><h2>Viator experiences widget</h2><p>The native tour catalog uses server-side Viator API requests and provider-supplied media. Opening the optional original-widget section loads an external Viator widget. Viator may use cookies or similar technology for its functionality and affiliate attribution. Cookie details, retention and applicable consent requirements need review; the widget is not a site-wide consent manager. Reservations and payment occur on Viator, not Maldives.org.</p><h2>Stay22 accommodation partner links</h2><p>Stay22 LetMeAllez is available only in a separate accommodation partner document, after operator activation, reviewed supplier links and your choice to load the service. It may convert supported supplier links, enable travel discovery features and use cookies or similar technology for affiliate attribution. It does not provide our hotel inventory or process your payment. Our other affiliate links are kept outside this document.</p><p>Loading the service is optional. Review <a href="https://www.stay22.com/privacy" target="_blank" rel="noopener noreferrer">Stay22’s privacy policy</a>. Exact data flows, cookie purposes, lifetimes, consent requirements and account settings require review before activation. A script-loading choice does not by itself establish compliance with every applicable consent requirement.</p></div></ContentPage>; }
+import Link from "next/link";
+import { LegalPage } from "@/components/legal-page";
+import { legalMetadata } from "@/lib/legal-pages";
+import { getTravelpayoutsDrivePermissions } from "@/lib/travelpayouts-drive-config";
+
+export const metadata = legalMetadata("cookies");
+
+export default function CookiesPage() {
+  const driveEnabled = getTravelpayoutsDrivePermissions().enabled;
+
+  return (
+    <LegalPage policy="cookies">
+      <h2>Browser storage on Maldives.org</h2>
+      <p>Cookies and local storage let websites save or read information on your device. When you choose a display currency, we save your selection in your browser under <code>maldives.org.currency</code> so it can be used on another visit. The app sets no expiry for this setting. You can clear it by removing site data in your browser.</p>
+
+      <h2>Travel search and affiliate services</h2>
+      <ul>
+        <li><strong>Aviasales flight search.</strong> Opening the Flights page loads an embedded travel search tool. Aviasales describes the cookies and similar technologies its service may use. <a href="https://www.aviasales.com/cookie">Aviasales Cookie Policy</a>.</li>
+        <li><strong>Travelpayouts Drive.</strong> {driveEnabled ? "Drive is enabled and loads automatically on the site to support affiliate attribution. This site does not currently provide a separate visitor switch for Drive." : "Drive is disabled in this site configuration."} Partner settings and vendor practices determine the tracking technologies used. <a href="https://support.travelpayouts.com/hc/en-us/articles/360004121072-Cookie-Policy">Travelpayouts Cookie Policy</a>.</li>
+        <li><strong>Viator.</strong> Native tour search requests go through our server. Choosing the original Viator widget connects your browser to Viator, which may use storage for widget functions and attribution. <a href="https://www.viator.com/support/privacyPolicy">Viator Privacy Policy</a>.</li>
+        <li><strong>Stay22.</strong> On enabled accommodation partner pages, you can choose to load Stay22. The service can use storage or tracking to connect a supplier link to a referral. <a href="https://www.stay22.com/cookie">Stay22 Cookie Policy</a>.</li>
+      </ul>
+
+      <h2>Managing storage</h2>
+      <p>Use your browser’s site-data settings to clear or block cookies and local storage. This can reset your display preference or affect embedded tools. You can leave optional widgets unopened. After following a partner link, check that site’s cookie settings and notice for what it stores and for how long.</p>
+      <p>For other information we handle and how to contact us, see the <Link href="/privacy">Privacy Policy</Link>.</p>
+    </LegalPage>
+  );
+}

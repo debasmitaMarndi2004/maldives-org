@@ -8,6 +8,7 @@ import { ChevronDown, CloseIcon, MenuIcon } from "@/components/icons";
 import { supportedCurrencies } from "@/lib/currency";
 import { useCurrency } from "@/components/currency-provider";
 import { HomeNavbar } from "@/components/home-navbar";
+import { legalPages } from "@/lib/legal-pages";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -63,10 +64,16 @@ export function Footer() {
       <div className="page-wrap footer-grid">
         <div><Link className="brand footer-brand" href="/">Maldives<span>.org</span></Link><p>Discover. Compare.<br />Book. Experience.</p></div>
         <div><div className="footer-label">Explore</div><Link href="/stay">Resorts & stays</Link><Link href="/experiences">Experiences</Link><Link href="/guides">Travel guides</Link><Link href="/deals">Deals</Link><Link href="/how-it-works">How it works</Link></div>
-        <div><div className="footer-label">Maldives</div><Link href="/transfers">Transfers</Link><Link href="/atolls">Atolls & islands</Link><Link href="/about">About us</Link><Link href="/contact">Contact</Link><Link href="/affiliate-disclosure">Partner disclosure</Link></div>
+        <div><div className="footer-label">Maldives</div><Link href="/transfers">Transfers</Link><Link href="/atolls">Atolls & islands</Link><Link href="/about">About us</Link><Link href="/contact">Contact</Link></div>
         <div><div className="footer-label">Stay in the loop</div><p className="footer-small">Island notes, thoughtful stays and good reasons to go.</p><Link className="footer-arrow" href="/#newsletter">Join the newsletter <span aria-hidden="true">↗</span></Link></div>
       </div>
-      <div className="page-wrap footer-bottom"><span>© 2026 Maldives.org</span><div><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link><Link href="/cookies">Cookies</Link></div><span>Made for the curious.</span></div>
+      <div className="page-wrap footer-bottom">
+        <span>© 2026 Maldives.org</span>
+        <nav className="footer-legal" aria-label="Legal">
+          {Object.values(legalPages).map(({ href, title }) => <Link key={href} href={href}>{title}</Link>)}
+        </nav>
+        <span>Made for the curious.</span>
+      </div>
     </footer>
   );
 }

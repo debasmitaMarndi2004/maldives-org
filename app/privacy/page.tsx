@@ -1,2 +1,32 @@
-import { ContentPage } from "@/components/public-pages";
-export default function PrivacyPage() { return <ContentPage eyebrow="LEGAL · FOR REVIEW" title="Privacy, clearly stated." description="A professional template for legal review before public launch."><div className="detail-card"><h2>What we collect</h2><p>We may collect contact details, trip preferences and newsletter consent when you choose to share them. Booking, payment and partner data will be handled through the final production services selected for launch.</p><h2>Travelpayouts Drive</h2><p>Travelpayouts Drive is configured to load an external partner script for affiliate tracking. Its source is emrldco.com. The exact data fields, recipients and retention periods have not yet been independently verified, so this policy still requires review. Site-owner activation is not a record of visitor consent.</p><h2>Stay22 accommodation partner links</h2><p>Stay22 LetMeAllez is available only in a separate accommodation partner document, after operator activation, reviewed supplier links and your choice to load the service. It may convert supported supplier links, enable travel discovery features and use cookies or similar technology for affiliate attribution. It does not provide our hotel inventory or process your payment. Our other affiliate links are kept outside this document.</p><p>Loading the service is optional. Review <a href="https://www.stay22.com/privacy" target="_blank" rel="noopener noreferrer">Stay22’s privacy policy</a>. Exact data flows, cookie purposes, lifetimes, consent requirements and account settings require review before activation. A script-loading choice does not by itself establish compliance with every applicable consent requirement.</p><h2>Viator tour discovery</h2><p>Our native tour catalog sends search terms, destination and selected filters to Viator through our server to retrieve tour information. Provider-supplied photographs may load from Tripadvisor media servers. API credentials remain server-side. Tour details are shown on Maldives.org; selecting a booking action opens the original Viator partner destination in a new tab. We do not collect payment or create a reservation in this flow.</p><h2>Optional Viator widget</h2><p>Opening the original-widget option on the Tours &amp; Activities page loads an official Viator partner widget. Loading it connects your browser to Viator, which receives technical request information and may use cookies or similar technology. Bookings, payment and confirmation take place on Viator. See <a href="https://www.viator.com/support/privacyPolicy" target="_blank" rel="noopener noreferrer">Viator’s privacy policy</a>. Our public partner identifiers support affiliate attribution; no private API credentials are sent through this widget. Provider-specific data handling and any required consent controls need review before public launch.</p><h2>Your choices</h2><p>You can request access, correction or deletion of your personal information. Final policy language, retention periods and data processors should be approved by the business and legal counsel.</p></div></ContentPage>; }
+import Link from "next/link";
+import { LegalPage } from "@/components/legal-page";
+import { legalMetadata } from "@/lib/legal-pages";
+
+export const metadata = legalMetadata("privacy");
+
+export default function PrivacyPage() {
+  return (
+    <LegalPage policy="privacy">
+      <h2>What this policy covers</h2>
+      <p>This policy describes how information is used when you browse Maldives.org, use a search tool, or submit a form. A travel seller’s own privacy policy applies to the information you give it when you book.</p>
+
+      <h2>Information we use</h2>
+      <ul>
+        <li><strong>Contact enquiries.</strong> Your name, email, and message are used to record and respond to your enquiry. The confirmation tells you whether the enquiry was saved or the form was running in preview mode.</li>
+        <li><strong>Newsletter.</strong> If you sign up and the service is enabled, we use your email address and subscription record for Maldives.org updates. You can ask us to stop sending them through the contact form.</li>
+        <li><strong>Trip requests.</strong> If a request form is offered, we may use the traveller and contact details, dates, party size, and notes you provide to handle the request. Do not send card details, passwords, or passport scans through these forms.</li>
+        <li><strong>Site operation.</strong> Web requests can expose technical details such as IP address and browser information to hosting or service providers. The site also uses a request identifier derived from the connection to limit repeated submissions and protect its forms and APIs.</li>
+      </ul>
+
+      <h2>Searches, partners, and service providers</h2>
+      <p>Tour search sends search terms, destination, and selected filters to Viator through our server. Tour images may load from Tripadvisor media servers. If hotel availability search is enabled, Hotelbeds receives search details such as dates, hotel selections, and guest counts. The Aviasales flight search and optional Viator widget run in your browser and can receive the information you enter there along with technical request information.</p>
+      <p>When configured, Supabase stores enquiries, subscription records, and trip requests. Resend can deliver website emails. Partner widgets, affiliate attribution services, and their storage choices are listed in our <Link href="/cookies">Cookie Policy</Link>. These providers may process information in countries other than the one you are visiting from.</p>
+
+      <h2>How long information is kept</h2>
+      <p>Retention depends on why the information is needed. Enquiries and trip requests may be kept while we deal with them and for any applicable record-keeping or dispute requirements. Newsletter records support the subscription and may be needed to honour a removal request. The <Link href="/cookies">Cookie Policy</Link> explains the currency setting kept in your browser.</p>
+
+      <h2>Your choices and privacy requests</h2>
+      <p>Use our <Link href="/contact">contact form</Link> and start your message with “Privacy request” to ask about your information, request a correction or deletion, or stop newsletter messages. Depending on the law that applies, you may also have rights to access, object, restrict use, receive a copy in a portable format, withdraw consent, or complain to a privacy regulator. We may need to verify that the request relates to you. For information you gave directly to a travel seller, contact that seller.</p>
+    </LegalPage>
+  );
+}

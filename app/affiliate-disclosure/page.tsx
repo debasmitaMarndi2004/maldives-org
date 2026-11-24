@@ -1,5 +1,23 @@
-import { ContentPage } from "@/components/public-pages";
+import Link from "next/link";
+import { LegalPage } from "@/components/legal-page";
+import { legalMetadata } from "@/lib/legal-pages";
+
+export const metadata = legalMetadata("affiliate");
 
 export default function AffiliateDisclosurePage() {
-  return <ContentPage eyebrow="TRANSPARENCY · FOR REVIEW" title="How partner links work." description="How approved Travelpayouts, Viator, Booking.com, GetYourGuide and isolated Stay22 links work in this discovery MVP."><div className="detail-card"><h2>Some links may earn a commission.</h2><p>Maldives.org may receive a commission when a traveller completes an eligible booking through an approved affiliate or partner link. A provider is not active on a listing until its link is approved and connected. This does not change the price shown by the partner unless the partner explicitly says otherwise.</p><p>Where a booking is completed on a partner website, that partner is responsible for the final availability, payment, cancellation policy and booking confirmation. Maldives.org will make the hand-off visible so you know where the transaction takes place.</p></div><div className="detail-card"><h2>Stay22 accommodation links</h2><p>Stay22 is a supplier-link monetization service, not an accommodation inventory or availability API. Reviewed Stay22 supplier links are handled in a separate partner-selection document. Booking remains unavailable until an approved destination is configured, the service is enabled and link conversion is detected. A detected redirect does not guarantee commission credit. Existing affiliate attribution is not combined with Stay22 tracking.</p><h2>What we show you</h2><ul><li>Whether a listing is sample, partner-fed, affiliate or directly confirmed.</li><li>Sample prices are planning estimates, not live quotes or booking guarantees.</li><li>Which cancellation and payment terms still need supplier confirmation.</li></ul></div><div className="detail-card"><h2>Before public launch</h2><p>The final legal entity, commercial agreements, consumer-protection language, tax treatment and supplier-specific disclosures should be reviewed before this page is published as legal policy.</p></div></ContentPage>;
+  return (
+    <LegalPage policy="affiliate">
+      <h2>How we may earn a commission</h2>
+      <p>Maldives.org may earn a commission when you complete an eligible booking after following an affiliate link or using a partner search tool. You can always check the price and terms with the provider before choosing where to book.</p>
+
+      <h2>Where partner links appear</h2>
+      <p>You may see partner offers on stay and experience listings, in Viator tour results, or in Aviasales flight search powered through Travelpayouts. Where offered, Stay22 can help attribute referrals for accommodation bookings. On-site listings vary by the programs and links available for each property or experience.</p>
+
+      <h2>Who handles the booking</h2>
+      <p>The seller shown at checkout sets the final price, availability, payment terms, and cancellation conditions. A website referral does not confirm a reservation. See <Link href="/cancellation-policy">Cancellations &amp; Refunds</Link> for help finding the right seller after booking.</p>
+
+      <h2>Travel guides and listings</h2>
+      <p>We also publish destination guides, editorial activity ideas, and sample planning estimates. Check the listing’s labels and dates before relying on a quoted price or offer. For how referral tools may use browser storage, see the <Link href="/cookies">Cookie Policy</Link>.</p>
+    </LegalPage>
+  );
 }

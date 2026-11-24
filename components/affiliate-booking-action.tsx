@@ -23,6 +23,7 @@ export function AffiliateBookingAction({ productType, slug, detailsHref, compact
         <a className="button button-teal full-button" href={offer.href} target="_blank" rel="sponsored noopener noreferrer">Continue on {offer.label} ↗</a>
       </div>)}
       <p className="affiliate-disclosure">Booking, payment, final prices and availability are handled on the partner website. Opens in a new tab.</p>
+      <p className="affiliate-disclosure">We may earn a commission from eligible bookings. <Link className="text-link" href="/affiliate-disclosure">Affiliate disclosure</Link></p>
     </> : <>
       <p className="affiliate-status" role="status">{failed ? "Partner links are temporarily unavailable." : loading ? "Checking partner links…" : "Partner booking is not available for this listing yet."}</p>
       {!compact && <p className="affiliate-provider-labels">Providers: {providers.map(([, provider]) => provider.label).join(" · ")}. Approved links have not been connected for this listing.</p>}

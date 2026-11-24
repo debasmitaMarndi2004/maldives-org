@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import Link from "next/link";
 
 export function ContactFormLive() {
   const [result, setResult] = useState<"stored" | "preview" | null>(null);
@@ -25,5 +26,5 @@ export function ContactFormLive() {
   }
 
   if (result) return <div className="success-note" role="status">{result === "stored" ? "Your enquiry is saved. Email delivery is not confirmed on this page. This is not a booking confirmation." : "Preview only — your enquiry was not stored or sent. No booking or follow-up request was created."}</div>;
-  return <form onSubmit={handleSubmit}><label className="field-label" htmlFor="contact-name">Your name</label><input id="contact-name" name="name" className="input" placeholder="First and last name" required /><label className="field-label" htmlFor="contact-email">Email</label><input id="contact-email" name="email" className="input" placeholder="you@example.com" type="email" required /><label className="field-label" htmlFor="contact-message">How can we help?</label><textarea id="contact-message" name="message" className="input" rows={5} placeholder="Tell us a little about your trip" required />{error && <div className="note-box" role="alert">{error}</div>}<button className="button button-teal" type="submit" disabled={sending} style={{ marginTop: 15 }}>{sending ? "Sending…" : "Send enquiry"} <span>↗</span></button></form>;
+  return <form onSubmit={handleSubmit}><label className="field-label" htmlFor="contact-name">Your name</label><input id="contact-name" name="name" className="input" placeholder="First and last name" required /><label className="field-label" htmlFor="contact-email">Email</label><input id="contact-email" name="email" className="input" placeholder="you@example.com" type="email" required /><label className="field-label" htmlFor="contact-message">How can we help?</label><textarea id="contact-message" name="message" className="input" rows={5} placeholder="Tell us a little about your trip" required /><p className="form-note">We use your details to handle your enquiry. <Link href="/privacy">Privacy Policy</Link></p>{error && <div className="note-box" role="alert">{error}</div>}<button className="button button-teal" type="submit" disabled={sending} style={{ marginTop: 15 }}>{sending ? "Sending…" : "Send enquiry"} <span>↗</span></button></form>;
 }
