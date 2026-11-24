@@ -4,7 +4,7 @@ import { captureApplicationErrors } from "./browser-errors";
 test("homepage discovery and menu currency controls work", async ({ page }) => {
   const { errors, unavailableMedia } = captureApplicationErrors(page);
   await page.goto("/");
-  await expect(page.locator('iframe[title="Travelpayouts flight search"]')).toHaveCount(0);
+  await expect(page.locator("iframe")).toHaveCount(0);
   await expect(page.getByRole("heading", { name: "Find your perfect Maldives getaway." })).toBeVisible();
   await page.getByRole("button", { name: "Open menu", exact: true }).click();
   await page.getByLabel("Mobile currency", { exact: true }).selectOption("INR");
@@ -33,26 +33,29 @@ test("booking request endpoint rejects invalid input without writing data", asyn
   expect((await response.json()).ok).toBe(false);
 });
 
-test("direct supplier confirmation endpoints stay disabled in affiliate MVP", async ({ request }) => {
-  const checkRate = await request.post("/api/hotelbeds/checkrate", { data: { rateKeys: ["qa-rate-key"] } });
-  expect([400, 503]).toContain(checkRate.status());
-  expect((await checkRate.json()).ok).toBe(false);
-
-  const booking = await request.post("/api/hotelbeds/booking", {
-    data: {
-      confirm: true,
-      internalReference: "MD-QA-PREVIEW",
-      rateKey: "qa-rate-key",
-      holder: { name: "QA", surname: "Traveller" },
-      paxes: [{ name: "QA", surname: "Traveller" }],
-    },
-  });
-  expect([409, 503]).toContain(booking.status());
-  expect((await booking.json()).ok).toBe(false);
+test("retired partner and payment routes cannot handle requests", async ({ request }) => {
+  for (const path of [
+    "/api/affiliates",
+    "/api/hotelbeds/status",
+    "/api/tours/viator",
+    "/api/viator/products/preview",
+    "/flights/embed",
+    "/hotelbeds-certification",
+    "/out/booking-com/preview",
+    "/stay/partners/villa-park",
+    "/tours-and-activities/embed",
+    "/tours-and-activities/viator/preview",
+    "/tours-and-activities/viator/preview/book",
+  ]) {
+    expect((await request.get(path, { maxRedirects: 0 })).status(), path).toBe(404);
+  }
+  for (const path of ["/api/hotelbeds/search", "/api/hotelbeds/checkrate", "/api/hotelbeds/booking", "/api/stripe/checkout", "/api/stripe/webhook"]) {
+    expect((await request.post(path, { data: {}, maxRedirects: 0 })).status(), path).toBe(404);
+  }
 });
 
 test("dynamic content routes render", async ({ page }) => {
-  for (const route of ["/stay/overwater-romance", "/resorts/private-island-luxury", "/guesthouses/coral-garden-house", "/experiences/dive-with-manta-rays", "/booking/MD-PREVIEW", "/booking/MD-PREVIEW/voucher", "/hotelbeds-certification", "/checkout"]) {
+  for (const route of ["/stay/overwater-romance", "/resorts/private-island-luxury", "/guesthouses/coral-garden-house", "/experiences/dive-with-manta-rays", "/booking/MD-PREVIEW", "/booking/MD-PREVIEW/voucher", "/checkout"]) {
     const response = await page.goto(route);
     expect(response?.status(), route).toBe(200);
     await expect(page.getByRole("main")).toBeVisible();

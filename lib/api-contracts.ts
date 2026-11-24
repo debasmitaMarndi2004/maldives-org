@@ -1,4 +1,4 @@
-export type InventorySource = "sample" | "hotelbeds" | "viator" | "direct";
+export type InventorySource = "sample" | "supplier" | "direct";
 
 export type TravelProductType = "stay" | "experience" | "transfer";
 
@@ -46,14 +46,12 @@ export type BookingDraft = {
 
 export const sourceLabels: Record<InventorySource, string> = {
   sample: "Sample inventory",
-  hotelbeds: "Hotelbeds",
-  viator: "Viator experience",
+  supplier: "Supplier inventory",
   direct: "Direct Maldives partner",
 };
 
 export const sourceDescriptions: Record<InventorySource, string> = {
   sample: "A design preview. Availability is not live yet.",
-  hotelbeds: "Hotel availability checked through the connected Hotelbeds supplier.",
-  viator: "Experience details and booking are supplied through Viator.",
+  supplier: "Availability and terms are provided by the supplier.",
   direct: "A local Maldives partner confirms the request directly.",
 };

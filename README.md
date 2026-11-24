@@ -1,34 +1,21 @@
 # Maldives.org
 
-Premium Maldives discovery, transfer and trip-planning foundation built from the supplied screen recording, PRD and super-prompts.
+Maldives travel discovery and trip planning with an editorial accommodation directory, activity guides, island transfers and sample trip ideas.
 
 ## Run locally
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
-Open `http://localhost:3000`. The site uses clearly labelled sample inventory and remote image references so the UI can be reviewed before partner media and Supabase credentials are connected.
+Open `http://localhost:3000`. The app runs without supplier, payment, database or email credentials. See [local setup](docs/BEGINNER-SETUP.md) for verification steps.
 
-## Included surface
+## Current features
 
-- Homepage matched to the supplied recording: transparent navigation, aerial hero, floating stay search, live Malé widget, stay categories, featured stays, experiences bento, guide band, newsletter and footer.
-- Public discovery routes: `/stay`, `/resorts`, `/guesthouses`, `/experiences`, `/transfers`, `/guides`, `/deals`, `/atolls`, `/islands/[slug]`, `/plan-your-trip`, `/compare`, `/wishlist`.
-- Detail-ready pages for sample stays, experiences, guides, routes and atolls.
-- Account, partner and admin workspace shells with responsive operational UI.
-- Local wishlist interactions, search/filter state, map/list toggle, trip-builder steps, newsletter success state, concierge demo panel and route-query submission.
-- API-ready booking foundation: normalized supplier contract, source/availability labels, booking-request flow, confirmation state, “How it works” page and affiliate disclosure template.
-- Backend-ready request APIs for bookings, contact enquiries and newsletter subscriptions, plus Supabase persistence when configured.
-- Stripe Checkout and webhook endpoints are wired but remain disabled until keys and business/tax decisions are provided.
-- Viator product adapter, checkout/reference routes and reproducible Playwright/CI smoke tests.
-- Runtime hardening: security response headers, bounded external API calls, resilient email delivery and a route-wide browser audit that avoids writing test data.
-- Supabase foundation migration, RLS starting policies, sample seed and `.env.example` for the production integration described in the PRD.
+- The stay directory supports searching, filtering and comparison. Reviewed property pages cite official sources, and legacy sample listings remain labeled.
+- The tours and activities directory provides editorial guides. The flights, transfers and trip-planning pages help visitors prepare an itinerary.
+- The contact, newsletter and booking-request endpoints validate test submissions in preview mode. Live search, reservations, payment and email delivery are unavailable.
+- The currency selector uses labeled estimates and saves the chosen display currency in the browser.
 
-## Supplier integration plan
-
-The integration layer now targets Hotelbeds for hotel search and availability, Viator Affiliate for experiences, and direct Maldives partners for local stays/transfers. Hotelbeds credentials stay server-side, and live stay search activates when Maldives hotel codes are configured in `HOTELBEDS_MALDIVES_HOTEL_CODES`; otherwise the site safely keeps its labelled sample inventory. See [docs/API-READINESS.md](docs/API-READINESS.md) for the normalized contract and implementation order.
-
-## Before launch
-
-Replace all sample listings and remote images with licensed/partner-confirmed content. Follow [docs/BEGINNER-SETUP.md](docs/BEGINNER-SETUP.md), connect Supabase, complete Hotelbeds/Viator supplier certification, add Resend credentials, activate Stripe only after business/tax review, and complete the PRD launch checklist.
+See the [API readiness plan](docs/API-READINESS.md) for the contracts and booking requirements.

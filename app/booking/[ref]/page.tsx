@@ -1,18 +1,14 @@
-import { directTransactionsDisabled } from "@/lib/transaction-policy";
 import Link from "next/link";
-import { getSupabaseAdmin } from "@/lib/supabase-admin";
+import { ContentPage } from "@/components/public-pages";
 
-export default async function BookingReferencePage({ params }: { params: Promise<{ ref: string }> }) {
-  if (directTransactionsDisabled()) {
-    return <main className="page-main"><div className="page-wrap content-page"><div className="detail-card"><span className="eyebrow">PARTNER BOOKING</span><h1>Manage your booking with its provider.</h1><p>Booking records and vouchers are not available on Maldives.org during this affiliate MVP. Use the confirmation sent by your booking provider. This page does not confirm or create a reservation.</p><Link className="button button-teal" href="/stay">Explore stays</Link></div></div></main>;
-  }
-  const { ref } = await params;
-  const supabase = getSupabaseAdmin();
-  let booking: { offer_title: string; status: string; currency: string; price_from_usd: number | null; supplier_reference: string | null; voucher_url: string | null } | null = null;
-  if (supabase) {
-    const result = await supabase.from("booking_requests").select("offer_title, status, currency, price_from_usd, supplier_reference, voucher_url").eq("reference", ref).maybeSingle();
-    booking = result.data;
-  }
-
-  return <main className="page-main"><div className="page-wrap booking-confirmation"><span className="eyebrow">BOOKING REFERENCE</span><h1>{booking ? booking.status === "confirmed" ? "Your booking is confirmed." : "Your request is on record." : "Your reference is being prepared."}</h1><p>{booking ? `We have your request for ${booking.offer_title}. The current status is ${booking.status}.` : "This preview reference will become a live booking status after Supabase is connected."}</p><div className="confirmation-reference"><span>{booking?.supplier_reference ? "Hotelbeds reference" : "Reference"}</span><strong>{booking?.supplier_reference || ref}</strong></div>{booking && booking.status === "confirmed" && <div className="booking-actions"><Link className="button button-teal" href={`/booking/${encodeURIComponent(ref)}/voucher`}>View voucher</Link>{booking.price_from_usd && <Link className="button button-sun" href={`/checkout?booking=${encodeURIComponent(ref)}`}>Review secure checkout</Link>}</div>}<Link className="button button-ghost button-dark" href="/stay" style={{ marginTop: 8 }}>Keep exploring</Link></div></main>;
+export default function BookingReferencePage() {
+  return (
+    <ContentPage eyebrow="BOOKING SUPPORT" title="Manage your booking with its provider." description="Find the seller and booking reference on the confirmation or receipt issued when you booked.">
+      <div className="detail-card">
+        <h2>Changes and cancellations</h2>
+        <p>Contact the seller on your confirmation for booking status, changes and refund requests.</p>
+        <Link className="text-link" href="/cancellation-policy">Read the cancellations and refunds guide</Link>
+      </div>
+    </ContentPage>
+  );
 }

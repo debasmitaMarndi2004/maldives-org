@@ -1,19 +1,18 @@
 import { expect, test } from "@playwright/test";
-import { exchangeRateSnapshot, fallbackRates } from "../lib/currency";
-import { normalizeHotelbedsResults } from "../lib/hotelbeds-data";
+import { fallbackRateSnapshot, fallbackRates, supportedCurrencies } from "../lib/currency";
 import { normalizeSiteOrigin } from "../lib/site-origin";
 
-test("partial currency data identifies estimated rates and never invents a timestamp", () => {
-  const partial = exchangeRateSnapshot({ result: "success", rates: { USD: 1, EUR: 0.95, INR: -1 } });
-  expect(partial.source).toBe("mixed");
-  expect(partial.rates.EUR).toBe(0.95);
-  expect(partial.rates.INR).toBe(fallbackRates.INR);
-  expect(partial.estimatedCurrencies).toContain("INR");
-  expect(partial.updatedAt).toBeNull();
-  expect(exchangeRateSnapshot({ result: "success", base_code: "EUR", rates: { USD: 1 } }).source).toBe("fallback");
-  const complete = exchangeRateSnapshot({ result: "success", base_code: "USD", rates: fallbackRates });
-  expect(complete.source).toBe("open.er-api.com");
-  expect(complete.estimatedCurrencies).toEqual([]);
+test("planning currency rates are labeled as estimates", async ({ request }) => {
+  const response = await request.get("/api/currency/rates");
+  expect(response.status()).toBe(200);
+  const snapshot = fallbackRateSnapshot();
+  expect(await response.json()).toEqual(snapshot);
+  expect(snapshot).toMatchObject({
+    source: "fallback",
+    rates: fallbackRates,
+    estimatedCurrencies: [...supportedCurrencies],
+    updatedAt: null,
+  });
 });
 
 test("SEO defaults use the production domain and preserve explicit local configuration", () => {
@@ -21,14 +20,6 @@ test("SEO defaults use the production domain and preserve explicit local configu
     expect(normalizeSiteOrigin(input)).toBe("https://maldives.org");
   }
   expect(normalizeSiteOrigin("http://127.0.0.1:3000/path")).toBe("http://127.0.0.1:3000");
-});
-
-test("missing supplier ratings stay missing instead of becoming invented reviews", () => {
-  for (const [rating, expected] of [[undefined, null], ["", null], [true, null], ["invalid", null], [4.8, 4.8], ["4.2", 4.2]] as const) {
-    const result = normalizeHotelbedsResults({ hotels: { hotels: [{ code: "synthetic", name: "Local test fixture", rating, rooms: [{ rates: [{ rateKey: "synthetic", net: "100", currency: "USD" }] }] }] } }, "/test-image.jpg");
-    expect(result).toHaveLength(1);
-    expect(result[0].rating).toBe(expected);
-  }
 });
 
 test("homepage search opens source-reviewed accommodations and labels sample estimates", async ({ page }) => {

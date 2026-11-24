@@ -1,10 +1,16 @@
 import Link from "next/link";
 import { ContentPage } from "@/components/public-pages";
-import { affiliateProviders } from "@/lib/affiliate-providers";
 
 export default function HowItWorksPage() {
-  return <ContentPage eyebrow="HOW MALDIVES.ORG WORKS" title="A calmer way to plan island time." description="Discover stays, experiences and destination guides, with a clear explanation of who handles the booking.">
-    <div className="partner-grid">{Object.entries(affiliateProviders).map(([id, provider]) => <div className="detail-card" key={id}><span className="eyebrow">Affiliate provider</span><h2>{provider.label}</h2><p>{id === "booking-com" ? "Accommodation booking options." : id === "travelpayouts" ? "Travel partner links from approved campaigns." : "Experience and activity booking options."} A provider appears on a listing only after its exact partner link has been reviewed and connected.</p><span className="readiness-label">Approved links required · not a live availability feed</span></div>)}</div>
-    <div className="detail-card"><h2>Explore first, choose a provider second.</h2><p>The accommodation directory includes source-reviewed property facts. Legacy listing previews remain sample inventory, and the Tours guides describe editorial activity ideas. Any sample prices shown are planning estimates, and currency conversion may use fallback rates. A listing without an approved link offers details and guides instead of a booking.</p><p>When a partner link is available, the action names the provider. You leave Maldives.org to confirm dates, final prices, cancellation terms and payment on that provider’s website. We may receive a commission from eligible bookings.</p><p>Direct Hotelbeds reservations and Stripe payments are disabled during this affiliate MVP. The existing supplier adapters are preserved for future reviewed integrations.</p><Link className="button button-teal" href="/stay">Explore stays</Link> <Link className="text-link" href="/affiliate-disclosure">Read our disclosure</Link></div>
+  return <ContentPage eyebrow="HOW MALDIVES.ORG WORKS" title="A calmer way to plan island time." description="Explore stays, activity guides and routes before choosing what fits your trip.">
+    <div className="detail-card">
+      <h2>Build a shortlist</h2>
+      <p>Use the accommodation directory to compare published property details, then browse the tour guides and trip planner for ideas.</p>
+      <h2>Check dates and total costs</h2>
+      <p>Sample prices and currency conversions are planning estimates. Check current rates, transfers, taxes and cancellation terms with the property or operator.</p>
+      <h2>Confirm with the seller</h2>
+      <p>Live booking is currently unavailable on Maldives.org. For reservations made elsewhere, use the seller’s confirmation and support contact.</p>
+      <div className="booking-actions"><Link className="button button-teal" href="/stay">Explore stays</Link><Link className="text-link" href="/plan-your-trip">Plan your trip</Link></div>
+    </div>
   </ContentPage>;
 }

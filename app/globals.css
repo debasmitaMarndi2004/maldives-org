@@ -298,8 +298,7 @@ html.motion-ready [data-reveal].is-visible { opacity: 1; transform: none; }
 
 .source-badge { display: inline-flex; align-items: center; gap: 6px; width: fit-content; padding: 5px 8px; border-radius: 999px; color: var(--teal-dark); background: var(--aqua); font-size: 8px; font-weight: 800; letter-spacing: .02em; }
 
-.source-badge.source-hotelbeds { color: #126b68; background: #e0f6f3; }
-.source-badge.source-viator { color: #8e5d00; background: #fff5d6; }
+.source-badge.source-supplier { color: #126b68; background: #e0f6f3; }
 .source-badge.source-direct { color: #4c5a36; background: #eef4dc; }
 .source-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
 .card-source-row { margin: 9px 0 0; }
@@ -526,46 +525,9 @@ html.motion-ready [data-reveal].is-visible { opacity: 1; transform: none; }
 }
 img[data-media-state="fallback"] { object-fit: cover; background-color: #0f6470; }
 
-/* Affiliate discovery and keyboard access preserve the existing palette. */
 :where(a, button, input, select, textarea):focus-visible { outline: 3px solid var(--teal-dark); outline-offset: 4px; }
 .skip-link { position: fixed; z-index: 100; left: 16px; top: 12px; transform: translateY(-160%); padding: 12px 18px; border-radius: 12px; color: #fff; background: var(--navy); }
 .skip-link:focus { transform: none; }
-.affiliate-action { margin-top: 18px; padding-top: 14px; border-top: 1px solid #dfecee; }
-.affiliate-action-compact { margin-top: 12px; padding-top: 10px; }
-.affiliate-status, .affiliate-disclosure, .affiliate-provider-labels, .currency-note { font-size: 11px; line-height: 1.6; color: var(--ink-muted); }
-.affiliate-status { margin: 0 0 8px; }
-.affiliate-partner + .affiliate-partner { margin-top: 12px; }
-.affiliate-partner .eyebrow { display: block; margin-bottom: 7px; letter-spacing: .08em; }
-.affiliate-partner .button { padding: 12px 15px; }
-.affiliate-action .text-link { font-size: 11px; }
-.affiliate-retry { display: block; border: 0; background: transparent; padding: 8px 0; margin-top: 6px; }
-.experience-tile .affiliate-action { border-color: rgba(255,255,255,.3); }
-.experience-tile .affiliate-status, .experience-tile .affiliate-disclosure, .experience-tile .affiliate-action .text-link, .experience-tile .affiliate-partner .eyebrow { color: #fff; }
 button:disabled { cursor: not-allowed; opacity: .7; }
 button[aria-busy="true"] { cursor: progress; }
-.currency-note { margin: 8px 0; }
-.partner-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
-@media (max-width: 640px) { .partner-grid { grid-template-columns: 1fr; } .affiliate-partner .button { min-height: 44px; } }
-
-.flight-search-trial { position: relative; z-index: 5; margin-top: -52px; }
-.flight-search-trial-card { padding: 20px; background: #fff; border: 1px solid #dce8e9; border-radius: 16px; }
-.flight-search-trial-card h2 { font-size: 20px; margin: 0 0 8px; }
-.flight-search-trial-card > p { font-size: 13px; color: #526970; margin: 0 0 12px; }
-.flight-search-trial-content { min-width: 0; max-width: 100%; overflow-x: auto; }
-.flight-search-trial-content iframe { max-width: 100%; border: 0; }
-@media (max-width: 640px) { .flight-search-trial-card { padding: 14px; } }
-
-.white-label-frame { margin: 24px 0 16px; min-width: 0; }
-.white-label-frame iframe { display: block; width: 100%; border: 0; }
-.white-label-frame iframe[hidden] { display: none; }
-.white-label-fallback .flight-search-trial { margin-top: 24px; }
-.flight-entry-card { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
-.flight-entry-card h2 { font-size: 24px; font-weight: 700; }
-.flight-entry-card p { margin-top: 8px; font-size: 13px; color: var(--ink-muted); }
-
-.flights-hero { padding: 108px 0 24px; text-align: center; }
-.flights-hero .page-heading { max-width: 900px; }
-.flights-hero h1 { font-size: clamp(32px, 4.5vw, 54px); line-height: 1.06; }
-.flights-main { padding: 24px 0 64px; }
-.flights-main > .page-wrap { width: min(1120px, calc(100% - 32px)); }
-.flights-main .white-label-frame { margin: 0 auto; max-width: 1120px; }
+.currency-note { margin: 8px 0; font-size: 11px; line-height: 1.6; color: var(--ink-muted); }

@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { fallbackRates, isCurrency, supportedCurrencies, type Currency } from "@/lib/currency";
+import { fallbackRates, isCurrency, type Currency } from "@/lib/currency";
 
 const STORAGE_KEY = "maldives.org.currency";
 
@@ -19,49 +19,13 @@ const CurrencyContext = createContext<CurrencyContextValue | null>(null);
 
 export function CurrencyProvider({ children }: { children: React.ReactNode }) {
   const [currency, setCurrencyState] = useState<Currency>("USD");
-  const [rates, setRates] = useState<Record<Currency, number>>(fallbackRates);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isEstimated, setIsEstimated] = useState(true);
 
   useEffect(() => {
     let stored: string | null = null;
     try { stored = window.localStorage.getItem(STORAGE_KEY); } catch { /* Currency selection still works when storage is unavailable. */ }
-    const controller = new AbortController();
-    const timeout = window.setTimeout(() => controller.abort(), 10000);
-
-    let cancelled = false;
-    if (isCurrency(stored)) {
-      window.setTimeout(() => {
-        if (!cancelled) setCurrencyState(stored);
-      }, 0);
-    }
-
-    fetch("/api/currency/rates", { cache: "no-store", signal: controller.signal })
-      .then(async (response) => {
-        if (!response.ok) throw new Error("Currency rates unavailable");
-        return response.json() as Promise<{ rates?: Record<Currency, number>; source?: string }>;
-      })
-      .then((payload) => {
-        if (cancelled || !payload.rates) return;
-        const next = { ...fallbackRates };
-        for (const code of supportedCurrencies) {
-          const candidate = payload.rates[code];
-          if (Number.isFinite(candidate) && candidate > 0) next[code] = candidate;
-        }
-        setRates(next);
-        setIsEstimated(payload.source !== "open.er-api.com" || supportedCurrencies.some((code) => !Number.isFinite(payload.rates?.[code]) || Number(payload.rates?.[code]) <= 0));
-      })
-      .catch(() => undefined)
-      .finally(() => {
-        window.clearTimeout(timeout);
-        if (!cancelled) setIsLoading(false);
-      });
-
-    return () => {
-      cancelled = true;
-      window.clearTimeout(timeout);
-      controller.abort();
-    };
+    if (!isCurrency(stored)) return;
+    const restorePreference = window.setTimeout(() => setCurrencyState(stored), 0);
+    return () => window.clearTimeout(restorePreference);
   }, []);
 
   const setCurrency = useCallback((nextCurrency: Currency) => {
@@ -70,8 +34,8 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const convertFromUsd = useCallback(
-    (amount: number) => amount * (rates[currency] ?? 1),
-    [currency, rates],
+    (amount: number) => amount * fallbackRates[currency],
+    [currency],
   );
 
   const formatPrice = useCallback(
@@ -85,8 +49,8 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
   );
 
   const value = useMemo(
-    () => ({ currency, rates, isLoading, isEstimated, setCurrency, convertFromUsd, formatPrice }),
-    [convertFromUsd, currency, formatPrice, isLoading, isEstimated, rates, setCurrency],
+    () => ({ currency, rates: fallbackRates, isLoading: false, isEstimated: true, setCurrency, convertFromUsd, formatPrice }),
+    [convertFromUsd, currency, formatPrice, setCurrency],
   );
 
   return <CurrencyContext.Provider value={value}>{children}</CurrencyContext.Provider>;

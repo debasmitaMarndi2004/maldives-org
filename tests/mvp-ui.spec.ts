@@ -42,35 +42,13 @@ test("category directories constrain inventory, filtering handles empty results,
   await expect(page.locator(".directory-grid .stay-card").first()).toBeVisible();
 });
 
-test("approved providers are disclosed and missing approvals offer only details", async ({ page }) => {
-  for (const [route, provider] of [["/stay/overwater-romance", "Travelpayouts"], ["/stay/private-island-luxury", "Booking.com"], ["/experiences/dive-with-manta-rays", "Viator"], ["/experiences/sunset-cruise", "GetYourGuide"]]) {
-    await page.goto(route);
-    const action = page.getByRole("link", { name: `Continue on ${provider}`, exact: false });
-    await expect(action).toBeVisible();
-    await expect(action).toHaveAttribute("href", /^\/out\//);
-    await expect(action).toHaveAttribute("target", "_blank");
-    await expect(action).toHaveAttribute("rel", /sponsored/);
-    await expect(page.getByText("Booking, payment, final prices and availability are handled on the partner website. Opens in a new tab.")).toBeVisible();
+test("listing details remain accessible without live partner checkout", async ({ page }) => {
+  for (const route of ["/stay/overwater-romance", "/stay/private-island-luxury", "/experiences/dive-with-manta-rays", "/experiences/sunset-cruise"]) {
+    const response = await page.goto(route);
+    expect(response?.status()).toBe(200);
+    await expect(page.getByText("Live booking is currently unavailable on Maldives.org.", { exact: true })).toBeVisible();
+    await expect(page.locator('a[rel~="sponsored"], a[href^="/out/"]')).toHaveCount(0);
   }
-  await page.goto("/stay/coral-garden-house");
-  await expect(page.getByText("Partner booking is not available for this listing yet.")).toBeVisible();
-  await expect(page.locator('a[href^="/out/"]')).toHaveCount(0);
-  await expect(page.getByRole("link", { name: "View stay details", exact: false })).toBeVisible();
-  await expect(page.getByRole("button", { name: /request to book/i })).toHaveCount(0);
-});
-
-test("affiliate service errors offer a retry without exposing an outbound link", async ({ page }) => {
-  let available = false;
-  await page.route("**/api/affiliates", async (route) => {
-    if (available) await route.continue();
-    else await route.fulfill({ status: 503, contentType: "application/json", body: JSON.stringify({ error: "Temporarily unavailable" }) });
-  });
-  await page.goto("/stay/private-island-luxury");
-  await expect(page.getByText("Partner links are temporarily unavailable.")).toBeVisible();
-  await expect(page.locator('a[href^="/out/"]')).toHaveCount(0);
-  available = true;
-  await page.getByRole("button", { name: "Retry partner links" }).click();
-  await expect(page.getByRole("link", { name: "Continue on Booking.com", exact: false })).toBeVisible();
 });
 
 test("remote image failure preserves the original hero and shows fallback only on listing media", async ({ page }) => {
@@ -90,7 +68,10 @@ test("remote image failure preserves the original hero and shows fallback only o
 
 test("contact preview is clearly not a saved enquiry and failed requests show an error", async ({ page }) => {
   let mode: "preview" | "error" = "preview";
-  await page.route("**/api/inquiries", (route) => route.fulfill({ status: mode === "preview" ? 202 : 503, contentType: "application/json", body: JSON.stringify(mode === "preview" ? { ok: true, mode: "preview" } : { ok: false, message: "Enquiry temporarily unavailable" }) }));
+  await page.route("**/api/inquiries", (route) => {
+    if (mode === "preview") return route.continue();
+    return route.fulfill({ status: 503, json: { ok: false, message: "Enquiry temporarily unavailable" } });
+  });
   const fillContact = async () => {
     await page.getByLabel("Your name").fill("Local QA");
     await page.getByLabel("Email", { exact: true }).fill("qa@example.invalid");
@@ -107,7 +88,6 @@ test("contact preview is clearly not a saved enquiry and failed requests show an
 });
 
 test("newsletter preview never claims a subscription was created", async ({ page }) => {
-  await page.route("**/api/newsletter", (route) => route.fulfill({ status: 202, contentType: "application/json", body: JSON.stringify({ ok: true, mode: "preview" }) }));
   await page.goto("/");
   await page.getByLabel("Email address", { exact: true }).fill("qa@example.invalid");
   await page.getByRole("button", { name: "Sign me up" }).click();
@@ -115,15 +95,11 @@ test("newsletter preview never claims a subscription was created", async ({ page
   await expect(page.locator("#newsletter").getByRole("status")).not.toContainText("You’re on the list");
 });
 
-test("payment processing is disabled and forged live booking queries cannot activate a transaction", async ({ request, page }) => {
-  for (const endpoint of ["/api/stripe/checkout", "/api/stripe/webhook", "/api/hotelbeds/booking", "/api/hotelbeds/checkrate"]) {
-    const response = await request.post(endpoint, { data: {} });
-    expect([409, 503]).toContain(response.status());
-    expect((await response.json()).ok).toBe(false);
-  }
-  await page.goto("/booking?supplier=hotelbeds&hotel=forged&rateKey=forged&price=1&currency=USD&checkIn=2027-02-10&checkOut=2027-02-15");
-  await expect(page.getByRole("button", { name: /confirm hotelbeds booking/i })).toHaveCount(0);
-  await expect(page.getByRole("button", { name: /continue to stripe/i })).toHaveCount(0);
+test("legacy booking parameters do not start a transaction", async ({ page }) => {
+  await page.goto("/booking?supplier=hotelbeds&hotel=preview&rateKey=preview&price=1&currency=USD");
+  await expect(page.getByRole("heading", { name: "Booking is currently unavailable" })).toBeVisible();
+  await expect(page.getByRole("main").locator("form, iframe")).toHaveCount(0);
   await page.goto("/checkout");
-  await expect(page.getByRole("button", { name: /continue to stripe/i })).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: "Online checkout is unavailable" })).toBeVisible();
+  await expect(page.getByRole("main").locator("form, iframe")).toHaveCount(0);
 });

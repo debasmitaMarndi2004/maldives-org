@@ -22,7 +22,7 @@ export default async function ActivityIdeaPage({ params }: { params: Promise<{ s
     <ActivityArt tile={idea.tile} className={styles.guideArt} label={`Illustrative ${idea.category.toLowerCase()} scene`}/>
     <p className={styles.notice}>Original illustrative imagery · activity idea, not a confirmed tour product</p>
     <div className={styles.guideLayout}><section><h2>Before you choose an operator</h2><ul>{idea.notes.map((note) => <li key={note}>{note}</li>)}</ul><p className={styles.notice}>This guide does not confirm an itinerary, departure time, price or availability.</p></section>
-      <aside><h2>Booking stays with the provider.</h2><p>An approved operator booking link has not been connected to this guide.</p><button type="button" disabled>Partner booking unavailable</button><p>When an approved link is available, the named provider will handle reservations, payment, cancellation terms and booking confirmation.</p><Link className={styles.textLink} href="/affiliate-disclosure">About partner links <ArrowRight size={15}/></Link></aside>
+      <aside><h2>Live booking is currently unavailable</h2><p>Check schedules, meeting points and cancellation terms with your operator.</p><Link className={styles.textLink} href="/tours-and-activities">Explore other activities <ArrowRight size={15}/></Link></aside>
     </div>
     <details className={styles.legacy}><summary>Existing experience preview</summary><p>The original sample experience page is preserved. Its sample prices and durations are not confirmed operator information.</p><Link className={styles.textLink} href={`/experiences/${idea.slug}`}>View original preview <ArrowRight size={15}/></Link></details>
   </div></main>;

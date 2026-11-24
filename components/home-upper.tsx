@@ -17,7 +17,7 @@ function Symbol({kind}:{kind:SymbolKind}) {
  return <svg viewBox="0 0 26 26" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[kind]}</svg>;
 }
 const services=[
- {kind:"plane" as const,title:"Search Flights",description:"Find the best flight options to the Maldives worldwide.",action:"Search Flights",href:"/flights",art:"service-flights.webp"},
+ {kind:"plane" as const,title:"Flights",description:"Plan your arrival and the onward transfer to your island.",action:"Plan Flights",href:"/flights",art:"service-flights.webp"},
  {kind:"bed" as const,title:"Hotels & Resorts",description:"Discover resorts, overwater villas and handpicked stays.",action:"Find Stays",href:"/stay",art:"service-stays.webp"},
  {kind:"mask" as const,title:"Tours & Activities",description:"Explore snorkeling, diving, island hopping and more.",action:"Explore Activities",href:"/tours-and-activities",art:"service-activities.webp"},
 ];

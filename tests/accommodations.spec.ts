@@ -28,8 +28,7 @@ for (const width of [360, 390, 412, 768, 1280]) {
     await expect(page.locator(".directory-grid article")).toHaveCount(1);
     await page.getByRole("link", { name: "Explore stay", exact: true }).click();
     await expect(page.getByRole("heading", { name: "Villa Nautica", exact: true })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Check availability", exact: true })).toBeDisabled();
-    await expect(page.getByRole("status").filter({ hasText: "Booking partner unavailable" })).toBeVisible();
+    await expect(page.getByText("Live booking is currently unavailable on Maldives.org.", { exact: false })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     expect(errors).toEqual([]);
   });
@@ -57,8 +56,7 @@ test("details have source attribution and SEO without invented commercial facts"
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://maldives.org/stay/villa-park");
   await expect(page.getByRole("link", { name: "Official property/operator website", exact: false })).toHaveAttribute("href", "https://villaresorts.com/villa-park/");
   await expect(page.getByText("Original thematic artwork · not a photograph of Villa Park")).toBeVisible();
-  await expect(page.locator('a[href^="/stay/partners/"]')).toHaveCount(0);
-  await expect(page.locator('script[src*="stay22.com"]')).toHaveCount(0);
+  await expect(page.getByText("Live booking is currently unavailable on Maldives.org.", { exact: false })).toBeVisible();
   const missing = await request.get("/stay/not-a-real-accommodation");
   expect(missing.status()).toBe(404);
   const sitemap = await (await request.get("/sitemap.xml")).text();

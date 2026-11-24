@@ -7,7 +7,7 @@ for (const width of [360, 390, 412, 1280]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");
     await expect(page.getByRole("heading", { name: "Find your perfect Maldives getaway.", exact: true })).toBeVisible();
-    for (const name of ["Search Flights", "Find Stays", "Explore Activities"]) {
+    for (const name of ["Plan Flights", "Find Stays", "Explore Activities"]) {
       await expect(page.getByRole("link", { name, exact: true })).toBeVisible();
     }
     await expect(page.getByRole("heading", { name: "Explore the Maldives", exact: true })).toBeVisible();
@@ -30,7 +30,7 @@ for (const width of [360, 390, 412, 1280]) {
 
 test("discovery actions retain real internal destinations", async ({ page }) => {
   await page.goto("/");
-  for (const [name, href] of [["Search Flights", "/flights"], ["Find Stays", "/stay"], ["Explore Activities", "/tours-and-activities"], ["Read travel guide", "/guides"]]) {
+  for (const [name, href] of [["Plan Flights", "/flights"], ["Find Stays", "/stay"], ["Explore Activities", "/tours-and-activities"], ["Read travel guide", "/guides"]]) {
     await expect(page.getByRole("link", { name, exact: true })).toHaveAttribute("href", href);
   }
   const islands = page.getByRole("list", { name: "Maldives islands", exact: true });

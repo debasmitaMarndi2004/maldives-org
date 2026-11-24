@@ -17,9 +17,9 @@ const routes = [
   "/deals",
   "/experiences",
   "/faq",
+  "/flights",
   "/guesthouses",
   "/guides",
-  "/hotelbeds-certification",
   "/how-it-works",
   "/partner",
   "/plan-your-trip",
@@ -27,6 +27,8 @@ const routes = [
   "/resorts",
   "/stay",
   "/terms",
+  "/tours-and-activities",
+  "/tours-and-activities/reef-snorkelling",
   "/transfers",
   "/wishlist",
   "/stay/overwater-romance",
@@ -36,9 +38,16 @@ const routes = [
   "/guides/best-time-to-visit",
 ];
 
-test("all public routes render without a server error", async ({ page }) => {
+test("public routes render without application errors or external integration requests", async ({ page, baseURL }) => {
   test.setTimeout(120_000);
+  const origin = new URL(baseURL!).origin;
   const missingResources: string[] = [];
+  const externalIntegrationRequests: string[] = [];
+  page.on("request", (request) => {
+    if (["document", "xhr", "fetch", "script"].includes(request.resourceType()) && new URL(request.url()).origin !== origin) {
+      externalIntegrationRequests.push(request.url());
+    }
+  });
   page.on("response", (response) => {
     if (response.status() === 404 && !response.url().includes("favicon")) {
       missingResources.push(response.url());
@@ -54,4 +63,5 @@ test("all public routes render without a server error", async ({ page }) => {
   }
 
   expect(missingResources).toEqual([]);
+  expect(externalIntegrationRequests).toEqual([]);
 });

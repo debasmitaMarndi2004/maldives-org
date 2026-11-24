@@ -10,12 +10,12 @@ export const legalPages = {
   privacy: {
     href: "/privacy",
     title: "Privacy Policy",
-    description: "What information Maldives.org handles, why we use it, and how to make a privacy request.",
+    description: "What information Maldives.org handles when you browse and use preview forms.",
   },
   cookies: {
     href: "/cookies",
     title: "Cookie Policy",
-    description: "How Maldives.org and its travel partners use browser storage, embeds, and affiliate tracking.",
+    description: "How Maldives.org uses browser storage and how to clear your saved preference.",
   },
   affiliate: {
     href: "/affiliate-disclosure",
