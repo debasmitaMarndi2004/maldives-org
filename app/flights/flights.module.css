@@ -1,0 +1,451 @@
+.page {
+  padding: 94px 0 48px;
+  background: linear-gradient(#fff 80px, var(--soft) 80px);
+}
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  min-height: 374px;
+  overflow: hidden;
+  border-radius: 24px;
+  color: #fff;
+  background: #075260;
+}
+
+.artwork {
+  position: absolute;
+  z-index: -2;
+  inset: 0 0 0 28%;
+}
+
+.heroImage {
+  object-fit: cover;
+  object-position: center 54%;
+}
+
+.hero::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  content: "";
+  background: linear-gradient(90deg, #063946, #075a67 29%, rgb(5 85 98 / 60%) 45%, transparent 68%);
+}
+
+.heroCopy {
+  padding: 65px clamp(30px, 4.6vw, 65px) 108px;
+}
+
+.heroCopy h1 {
+  margin: 0;
+  font-size: clamp(40px, 5.1vw, 71px);
+  font-weight: 800;
+  line-height: .99;
+  letter-spacing: -.062em;
+}
+
+.heroCopy h1 span {
+  display: block;
+}
+
+.heroCopy p {
+  max-width: 53ch;
+  margin: 17px 0 0;
+  color: #edfaff;
+  font-size: clamp(15px, 1.45vw, 19px);
+  line-height: 1.55;
+}
+
+.form {
+  position: relative;
+  margin: -62px clamp(18px, 3.3vw, 42px) 0;
+  padding: 19px 24px 24px;
+  border: 1px solid #e1ebed;
+  border-radius: 19px;
+  background: #fff;
+  box-shadow: 0 12px 27px rgb(10 42 51 / 8%), 0 2px 5px rgb(10 42 51 / 6%);
+}
+
+.formTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 7px 22px;
+  margin-bottom: 10px;
+}
+
+.tripOptions {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: 4px 23px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.tripOptions label {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tripOptions input {
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  accent-color: #0a8796;
+}
+
+.previewNote {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1.18fr) minmax(0, 1.03fr) repeat(3, minmax(0, 1fr)) auto;
+  border: 1px solid #d9e5e8;
+  border-radius: 12px;
+}
+
+.fields[data-round-trip="false"] {
+  grid-template-columns: minmax(0, 1.18fr) minmax(0, 1.03fr) repeat(2, minmax(0, 1fr)) auto;
+}
+
+.field {
+  display: grid;
+  min-width: 0;
+  min-height: 70px;
+  align-content: center;
+  gap: 3px;
+  padding: 10px 14px;
+  border-right: 1px solid #d9e5e8;
+  font-size: 15px;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.fieldLabel {
+  color: var(--ink-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.field select,
+.dateControl input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 24px;
+  padding: 0;
+  color: var(--navy);
+  background: transparent;
+  border: 0;
+  border-radius: 3px;
+}
+
+.selectControl,
+.dateControl {
+  position: relative;
+  min-width: 0;
+}
+
+.selectControl select {
+  appearance: none;
+  padding-right: 17px;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.selectControl svg {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  color: var(--ink-muted);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.dateControl:has(.datePlaceholder) input:not(:focus) {
+  color: transparent;
+}
+
+.datePlaceholder {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  color: var(--ink-muted);
+  font-weight: 600;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.dateControl:focus-within .datePlaceholder {
+  visibility: hidden;
+}
+
+.submitCell {
+  display: flex;
+  align-items: stretch;
+  padding: 8px;
+}
+
+.submit {
+  display: inline-flex;
+  width: 100%;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 9px;
+  color: var(--navy);
+  background: var(--sun);
+  font-size: 14px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.submit:hover {
+  background: #ffd15b;
+}
+
+.details {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 40px;
+  margin: 40px clamp(10px, 2vw, 23px) 0;
+}
+
+.details h2 {
+  margin: 0 0 16px;
+  font-size: clamp(22px, 2.45vw, 32px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -.043em;
+  scroll-margin-top: 95px;
+}
+
+.ticket {
+  display: grid;
+  grid-template-columns: auto minmax(32px, 1fr) auto max-content;
+  align-items: center;
+  gap: clamp(14px, 2vw, 25px);
+  padding: 18px 24px;
+  border: 1px solid #d9e5e8;
+  border-radius: 15px;
+  background: #fff;
+}
+
+.airport {
+  display: grid;
+  line-height: 1.1;
+}
+
+.airport strong {
+  font-size: 31px;
+  font-weight: 800;
+  letter-spacing: -.04em;
+}
+
+.airport span {
+  margin-top: 3px;
+  color: var(--ink-muted);
+  font-size: 13px;
+}
+
+.flightLine {
+  display: flex;
+  align-items: center;
+  color: #0a9cab;
+}
+
+.flightLine::before {
+  flex: 1;
+  margin-right: -6px;
+  border-top: 1px solid currentColor;
+  content: "";
+}
+
+.ticketDetails {
+  padding-left: 19px;
+  border-left: 1px solid #d9e5e8;
+  color: var(--ink-muted);
+  font-size: 13px;
+}
+
+.ticketDetails p {
+  margin: 0;
+}
+
+.ticketDetails .ticketDates {
+  margin-top: 4px;
+  font-size: 12px;
+}
+
+.transfer h2 {
+  margin-bottom: 9px;
+  font-size: clamp(20px, 2.15vw, 27px);
+}
+
+.transfer p {
+  max-width: 34ch;
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.transferLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin-top: 11px;
+}
+
+.transferLinks a {
+  display: inline-flex;
+  min-height: 30px;
+  align-items: center;
+  gap: 6px;
+  color: #087580;
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 1040px) {
+  .heroCopy p {
+    max-width: 35ch;
+  }
+
+  .fields,
+  .fields[data-round-trip="false"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    border: 0;
+  }
+
+  .field {
+    min-height: 60px;
+    border: 1px solid #d9e5e8;
+    border-radius: 9px;
+  }
+
+  .submitCell {
+    padding: 0;
+  }
+
+  .fields[data-round-trip="false"] .submitCell {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 900px) {
+  .details {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+}
+
+@media (max-width: 560px) {
+  .page {
+    padding-top: 79px;
+    padding-bottom: 39px;
+    background: linear-gradient(#fff 70px, var(--soft) 70px);
+  }
+
+  .hero {
+    min-height: 302px;
+    border-radius: 19px;
+  }
+
+  .artwork {
+    inset: 108px 0 0;
+    mask-image: linear-gradient(transparent, #000 26px);
+  }
+
+  .hero::after {
+    background: linear-gradient(180deg, #063946 0%, #075a67 34%, rgb(5 85 98 / 50%) 52%, transparent 72%);
+  }
+
+  .heroCopy {
+    padding: 28px 22px 125px;
+  }
+
+  .heroCopy h1 {
+    font-size: clamp(34px, 9.4vw, 49px);
+  }
+
+  .heroCopy p {
+    max-width: 26ch;
+    margin-top: 10px;
+    font-size: 14px;
+  }
+
+  .form {
+    margin: -23px 0 0;
+    padding: 13px 12px 14px;
+    border-radius: 15px;
+  }
+
+  .formTop {
+    margin-bottom: 13px;
+  }
+
+  .tripOptions label {
+    min-height: 39px;
+  }
+
+  .fields,
+  .fields[data-round-trip="false"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .field {
+    padding-inline: 10px;
+    font-size: 14px;
+  }
+
+  .fields[data-round-trip="true"] .travellers,
+  .submitCell,
+  .fields[data-round-trip="false"] .submitCell {
+    grid-column: 1 / -1;
+  }
+
+  .details {
+    margin: 27px 0 0;
+  }
+
+  .ticket {
+    grid-template-columns: auto minmax(24px, 1fr) auto;
+    gap: 12px 17px;
+    padding: 15px 17px;
+  }
+
+  .airport strong {
+    font-size: 28px;
+  }
+
+  .ticketDetails {
+    grid-column: 1 / -1;
+    padding: 11px 0 0;
+    border-top: 1px solid #d9e5e8;
+    border-left: 0;
+  }
+
+  .transferLinks a {
+    min-height: 44px;
+  }
+}

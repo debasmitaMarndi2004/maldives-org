@@ -1,5 +1,6 @@
-import Link from "next/link";
-import { ContentPage } from "@/components/public-pages";
+import Image from "next/image";
+import { FlightPreview } from "./flight-preview";
+import styles from "./flights.module.css";
 
 export const metadata = {
   title: "Flights to the Maldives — Maldives.org",
@@ -9,17 +10,26 @@ export const metadata = {
 
 export default function FlightsPage() {
   return (
-    <ContentPage eyebrow="PLAN YOUR JOURNEY" title="Flights to the Maldives" description="Plan your flight and the onward connection to your island.">
-      <div className="detail-card">
-        <h2>Flight search is currently unavailable</h2>
-        <p>Confirm fares, baggage rules and ticket changes directly with your airline or travel seller.</p>
-        <h2>Check your island connection</h2>
-        <p>Before choosing an arrival time, ask your accommodation which airport, jetty or domestic connection you need and when the last transfer departs.</p>
-        <div className="booking-actions">
-          <Link className="button button-teal" href="/transfers">Explore island transfers</Link>
-          <Link className="button button-ghost button-dark" href="/plan-your-trip">Plan your trip</Link>
-        </div>
+    <main className={styles.page}>
+      <div className="page-wrap">
+        <section className={styles.hero} aria-labelledby="flights-title">
+          <div className={styles.artwork}>
+            <Image
+              alt=""
+              className={styles.heroImage}
+              fill
+              preload
+              unoptimized
+              src="/images/home-redesign/service-flights.webp"
+            />
+          </div>
+          <div className={styles.heroCopy}>
+            <h1 id="flights-title">Flights to the <span>Maldives</span></h1>
+            <p>Plan your arrival and your onward journey to the islands.</p>
+          </div>
+        </section>
+        <FlightPreview />
       </div>
-    </ContentPage>
+    </main>
   );
 }
