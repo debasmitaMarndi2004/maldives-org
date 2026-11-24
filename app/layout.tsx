@@ -7,6 +7,7 @@ import { CurrencyProvider } from "@/components/currency-provider";
 import { AffiliateProvider } from "@/components/affiliate-provider";
 import { InitialTravelLoading } from "@/components/initial-travel-loading";
 import { NavigationTravelLoading } from "@/components/navigation-travel-loading";
+import { TravelLoadingSplash } from "@/components/travel-loading";
 import { TravelpayoutsDrive } from "@/components/travelpayouts-drive";
 import { getTravelpayoutsDrivePermissions } from "@/lib/travelpayouts-drive-config";
 
@@ -22,19 +23,22 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <TravelpayoutsDrive permissions={getTravelpayoutsDrivePermissions()} />
       </head>
       <body>
+        <TravelLoadingSplash />
         <InitialTravelLoading />
         <Suspense fallback={null}>
           <NavigationTravelLoading />
         </Suspense>
-        <CurrencyProvider>
-          <AffiliateProvider>
-            <a className="skip-link" href="#main-content">Skip to content</a>
-            <Navbar />
-            <ScrollRevealObserver />
-            <div id="main-content" tabIndex={-1}>{children}</div>
-            <Footer />
-          </AffiliateProvider>
-        </CurrencyProvider>
+        <div data-site-content>
+          <CurrencyProvider>
+            <AffiliateProvider>
+              <a className="skip-link" href="#main-content">Skip to content</a>
+              <Navbar />
+              <ScrollRevealObserver />
+              <div id="main-content" tabIndex={-1}>{children}</div>
+              <Footer />
+            </AffiliateProvider>
+          </CurrencyProvider>
+        </div>
       </body>
     </html>
   );

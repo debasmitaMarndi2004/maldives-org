@@ -1,5 +1,5 @@
-import { TravelLoading } from "@/components/travel-loading";
+import { TravelLoadingSignal } from "@/components/travel-loading";
 
 export default function Loading() {
-  return <TravelLoading />;
+  return <TravelLoadingSignal scope="route" />;
 }

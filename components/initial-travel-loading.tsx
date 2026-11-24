@@ -1,14 +1,19 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { TravelLoading } from "./travel-loading";
+import { TravelLoadingSignal } from "./travel-loading";
 
-const subscribe = () => () => {};
-const clientSnapshot = () => true;
+function subscribe(onReady: () => void) {
+  document.addEventListener("DOMContentLoaded", onReady);
+
+  return () => document.removeEventListener("DOMContentLoaded", onReady);
+}
+
+const documentReady = () => document.readyState !== "loading";
 const serverSnapshot = () => false;
 
 export function InitialTravelLoading() {
-  const hydrated = useSyncExternalStore(subscribe, clientSnapshot, serverSnapshot);
+  const ready = useSyncExternalStore(subscribe, documentReady, serverSnapshot);
 
-  return hydrated ? null : <TravelLoading placement="initial" />;
+  return ready ? null : <TravelLoadingSignal scope="initial" />;
 }

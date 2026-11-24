@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, SearchIcon } from "@/components/icons";
-import { TravelLoading } from "@/components/travel-loading";
+import { TravelLoadingSignal } from "@/components/travel-loading";
 import { parseTourFilters, VIATOR_PAGE_SIZE, viatorCategories, viatorCurrencies, type TourFilters, type TourResults, type ViatorTour } from "@/lib/tours/viator-data";
 import { ViatorPhoto } from "./viator-photo";
 import { ViatorWidget } from "./viator-widget";
@@ -66,6 +66,7 @@ export function ViatorTours({ initialFilters }: { initialFilters: TourFilters })
   const reset = () => apply({ ...initialFilters, q: "", category: "", maxPrice: null, duration: null, sort: "recommended", page: 1, currency: filters.currency });
   const hasNext = data && filters.page < 100 && (data.total !== null ? filters.page * VIATOR_PAGE_SIZE < data.total : data.tours.length === VIATOR_PAGE_SIZE);
   return <section className={`page-wrap ${styles.collection}`} id="viator-tours" aria-labelledby="native-tours-title">
+    {loading && !remote.key && <TravelLoadingSignal scope="section" />}
     <div className={styles.viatorHeading}><div><span className={styles.category}>POWERED BY VIATOR</span><h2 id="native-tours-title">Find your Maldives experience</h2></div><span className={styles.providerBadge}>Viator</span></div>
     <p className={styles.widgetDisclosure}>Explore real tours supplied by Viator. View details here, then check final availability and book on Viator in a new tab. Maldives.org may earn a commission. <Link href="/affiliate-disclosure">About partner links</Link>.</p>
     <form onSubmit={event => { event.preventDefault(); apply({ ...draft, page: 1 }); }} aria-label="Filter Viator tours">
@@ -83,7 +84,7 @@ export function ViatorTours({ initialFilters }: { initialFilters: TourFilters })
     <div className={styles.results}>
       <div role="status">
         {loading
-          ? <TravelLoading placement="inline" message="Searching Viator tours…" />
+          ? <p>Searching Viator tours…</p>
           : <p>{remote.error ? remote.error : data?.sandbox ? "Sandbox test data — not live inventory or bookable offers" : `${data?.total !== null && data?.total !== undefined ? `${data.total} tours match` : "Viator tours"} · page ${filters.page} · ${filters.currency}`}</p>}
       </div>
       <button type="button" onClick={reset}>Clear tour filters</button>

@@ -100,8 +100,11 @@ test("a loaded script without rendered content times out rather than claiming in
   await page.goto("/tours-and-activities");
     await page.getByRole("region", { name: "Find your Maldives experience", exact: true }).getByText("Use the original Viator widget instead", { exact: true }).click();
   const section = page.getByRole("region", { name: "Explore Viator Experiences", exact: true });
-  await expect(section.getByRole("status")).toContainText("Loading");
+  const splash = page.getByRole("status", { name: "" }).filter({ hasText: "Preparing your Maldives experience…" });
+  await expect(splash).toBeVisible();
+  await expect(section).toBeHidden();
   await page.frameLocator('iframe[title="Viator Maldives tours and activities"]').locator('script[src="https://www.viator.com/orion/partner/widget.js"]').waitFor({ state: "attached" });
   await page.clock.fastForward(26000);
+  await expect(splash).toBeHidden();
   await expect(section.getByRole("status")).toContainText("could not load");
 });
