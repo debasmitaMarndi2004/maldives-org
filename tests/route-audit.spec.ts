@@ -65,3 +65,15 @@ test("public routes render without application errors or external integration re
   expect(missingResources).toEqual([]);
   expect(externalIntegrationRequests).toEqual([]);
 });
+
+test("anonymous visitors cannot open staff drafts", async ({ page }) => {
+  for (const path of ["/admin/preview", "/admin/preview/reef-etiquette"]) {
+    await page.goto(path, { waitUntil: "domcontentloaded" });
+    await expect(page).toHaveURL(/\/admin$/);
+    await expect(page.locator("main h1")).toHaveText(/Staff (sign in|access unavailable)/);
+    await expect(page.getByRole("link", { name: "Preview draft" })).toHaveCount(0);
+  }
+  const response = await page.request.get("/admin");
+  expect(response.headers()["cache-control"]).toContain("no-store");
+  expect(response.headers()["x-robots-tag"]).toContain("noindex");
+});

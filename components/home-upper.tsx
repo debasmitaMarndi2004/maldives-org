@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "@/components/icons";
 import credits from "@/public/images/home-redesign/islands/provenance.json";
+import { heroImages, type SiteContent } from "@/lib/site-content";
 import styles from "./home-upper.module.css";
 
 type SymbolKind = "plane" | "bed" | "mask" | "shield" | "layers" | "bolt" | "headset";
@@ -17,9 +18,9 @@ function Symbol({kind}:{kind:SymbolKind}) {
  return <svg viewBox="0 0 26 26" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[kind]}</svg>;
 }
 const services=[
- {kind:"plane" as const,title:"Flights",description:"Plan your arrival and the onward transfer to your island.",action:"Plan Flights",href:"/flights",art:"service-flights.webp"},
- {kind:"bed" as const,title:"Hotels & Resorts",description:"Discover resorts, overwater villas and handpicked stays.",action:"Find Stays",href:"/stay",art:"service-stays.webp"},
- {kind:"mask" as const,title:"Tours & Activities",description:"Explore snorkeling, diving, island hopping and more.",action:"Explore Activities",href:"/tours-and-activities",art:"service-activities.webp"},
+ {kind:"plane" as const,key:"flights" as const,title:"Flights",action:"Plan Flights",href:"/flights",art:"service-flights.webp"},
+ {kind:"bed" as const,key:"stays" as const,title:"Hotels & Resorts",action:"Find Stays",href:"/stay",art:"service-stays.webp"},
+ {kind:"mask" as const,key:"tours" as const,title:"Tours & Activities",action:"Explore Activities",href:"/tours-and-activities",art:"service-activities.webp"},
 ];
 const benefits=[
  {kind:"shield" as const,title:"Trusted Partners",description:"Leading travel providers"},
@@ -33,15 +34,16 @@ const islands=[
  {slug:"hulhumale",name:"Hulhumalé",description:"Modern Island Living"},
  {slug:"dhigurah",name:"Dhigurah",description:"Whale Shark Paradise"},
 ];
-export function HomeUpper(){
- return <div className={styles.upper}>
-  <div className={styles.scene} data-home-hero>
+export function HomeUpper({ hero, serviceDescriptions }: Pick<SiteContent, "hero" | "serviceDescriptions">){
+ const heroArt = hero.image === "lagoon" ? undefined : ({ "--hero-art": `url(${heroImages[hero.image].path})` } as React.CSSProperties);
+ return <div className={styles.upper} data-hero-accent={hero.accent}>
+  <div className={styles.scene} style={heroArt} data-home-hero>
    <section className={`${styles.wrap} ${styles.hero}`} aria-label="Discover the Maldives">
-    <h1>Find your perfect<br/>Maldives getaway.</h1>
-    <p>Explore extraordinary resorts, overwater villas, unforgettable experiences, and travel options — all in one place.</p>
-    <div className={styles.actions}><Link className={styles.primary} href="/stay">Explore Resorts <ArrowUpRight/></Link><Link className={styles.outline} href="/experiences">Discover Experiences <ArrowUpRight/></Link></div>
+    <h1>{hero.firstLine}<br/>{hero.secondLine}</h1>
+    <p>{hero.intro}</p>
+    <div className={styles.actions}><Link className={styles.primary} href="/stay">{hero.staysLabel} <ArrowUpRight/></Link><Link className={styles.outline} href="/experiences">{hero.experiencesLabel} <ArrowUpRight/></Link></div>
    </section>
-   <div className={`${styles.wrap} ${styles.services}`} aria-label="Plan your trip">{services.map(s=><Link key={s.href} href={s.href} aria-label={s.action} className={styles.service} style={{backgroundImage:`url(/images/home-redesign/${s.art})`}}><span className={styles.serviceIcon}><Symbol kind={s.kind}/></span><div className={styles.serviceCopy}><h2>{s.title}</h2><p>{s.description}</p><span className={styles.pill}>{s.action}<ArrowUpRight size={15}/></span></div></Link>)}</div>
+   <div className={`${styles.wrap} ${styles.services}`} aria-label="Plan your trip">{services.map(s=><Link key={s.href} href={s.href} aria-label={s.action} className={styles.service} style={{backgroundImage:`url(/images/home-redesign/${s.art})`}}><span className={styles.serviceIcon}><Symbol kind={s.kind}/></span><div className={styles.serviceCopy}><h2>{s.title}</h2><p>{serviceDescriptions[s.key]}</p><span className={styles.pill}>{s.action}<ArrowUpRight size={15}/></span></div></Link>)}</div>
   </div>
   <div className={`${styles.wrap} ${styles.benefits}`} aria-label="Why explore with Maldives.org">{benefits.map(b=><div className={styles.benefit} key={b.title}><Symbol kind={b.kind}/><div><strong>{b.title}</strong><span>{b.description}</span></div></div>)}</div>
   <section className={`${styles.wrap} ${styles.islands}`} aria-labelledby="home-islands-title">

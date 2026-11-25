@@ -18,4 +18,6 @@ Open `http://localhost:3000`. The app runs without supplier, payment, database o
 - The contact, newsletter and booking-request endpoints validate test submissions in preview mode. Live search, reservations, payment and email delivery are unavailable.
 - The currency selector uses labeled estimates and saves the chosen display currency in the browser.
 
+The private staff workspace supports password or email-code sign-in and versioned drafts. See [staff workspace setup](docs/ADMIN-SETUP.md) to configure it.
+
 See the [API readiness plan](docs/API-READINESS.md) for the contracts and booking requirements.

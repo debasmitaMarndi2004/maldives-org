@@ -14,4 +14,3 @@ function PortalShell({ kind }: { kind: "Partner" | "Admin" }) {
 }
 
 export function PartnerPortal() { return <PortalShell kind="Partner" />; }
-export function AdminPortal() { return <PortalShell kind="Admin" />; }

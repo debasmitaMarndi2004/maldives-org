@@ -4,9 +4,11 @@ import { tourIdeas } from "@/lib/tours/ideas";
 import { experiences, guides } from "@/lib/data";
 import { accommodations } from "@/lib/accommodations/catalog";
 import { legalPages } from "@/lib/legal-pages";
+import { getPublishedSite } from "@/lib/public-content";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = getSiteOrigin();
+  const { pages } = await getPublishedSite();
   const routes = ["", "/stay", "/resorts", "/guesthouses", "/experiences", "/tours-and-activities", "/transfers", "/guides", "/deals", "/atolls", "/plan-your-trip", "/compare", "/about", "/contact", "/faq", "/how-it-works", ...Object.values(legalPages).map(({ href }) => href), "/booking", "/checkout"];
-  return [...routes.map((route) => ({ url: `${base}${route}`, lastModified: new Date() })), ...accommodations.map((property) => ({ url: `${base}/stay/${property.slug}`, lastModified: new Date(`${property.reviewedOn}T00:00:00Z`) })), ...tourIdeas.map((idea) => ({ url: `${base}/tours-and-activities/${idea.slug}` })), ...experiences.map((experience) => ({ url: `${base}/experiences/${experience.slug}`, lastModified: new Date() })), ...guides.map((guide) => ({ url: `${base}/guides/${guide.slug}`, lastModified: new Date() }))];
+  return [...pages.map(({ slug }) => ({ url: `${base}/pages/${slug}` })), ...routes.map((route) => ({ url: `${base}${route}`, lastModified: new Date() })), ...accommodations.map((property) => ({ url: `${base}/stay/${property.slug}`, lastModified: new Date(`${property.reviewedOn}T00:00:00Z`) })), ...tourIdeas.map((idea) => ({ url: `${base}/tours-and-activities/${idea.slug}` })), ...experiences.map((experience) => ({ url: `${base}/experiences/${experience.slug}`, lastModified: new Date() })), ...guides.map((guide) => ({ url: `${base}/guides/${guide.slug}`, lastModified: new Date() }))];
 }

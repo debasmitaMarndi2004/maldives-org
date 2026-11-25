@@ -19,7 +19,7 @@
 }
 
 .scene {
-  background:#1db8c4 url('/images/home-redesign/hero.webp') center -65px/cover no-repeat;
+  background:#1db8c4 var(--hero-art,url('/images/home-redesign/hero.webp')) center -65px/cover no-repeat;
   position:relative;
   padding-bottom:30px;
   isolation:isolate
@@ -98,9 +98,9 @@
 }
 
 .primary {
-  background:#ffcd05;
+  background:var(--hero-button,#ffcd05);
   color:#052c37;
-  border:1.5px solid #ffcd05
+  border:1.5px solid var(--hero-button,#ffcd05)
 }
 
 .outline {
@@ -711,3 +711,6 @@
     transition:none
   }
 }
+
+.upper[data-hero-accent="lagoon"] { --hero-button:#8fe4ed }
+.upper[data-hero-accent="sand"] { --hero-button:#f3ddb7 }

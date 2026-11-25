@@ -7,13 +7,15 @@ import { CurrencyProvider } from "@/components/currency-provider";
 import { InitialTravelLoading } from "@/components/initial-travel-loading";
 import { NavigationTravelLoading } from "@/components/navigation-travel-loading";
 import { TravelLoadingSplash } from "@/components/travel-loading";
+import { getPublishedSite } from "@/lib/public-content";
 
 export const metadata: Metadata = {
   title: "Maldives.org — Find your perfect Maldives",
   description: "Discover extraordinary resorts, local islands and unforgettable Maldives experiences.",
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const { footer, pages, homeSections } = await getPublishedSite();
   return (
     <html lang="en" data-scroll-behavior="smooth">
       <body>
@@ -28,7 +30,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <Navbar />
             <ScrollRevealObserver />
             <div id="main-content" tabIndex={-1}>{children}</div>
-            <Footer />
+            <Footer copy={footer} links={pages.filter(page => page.footerLink).map(({ slug, title }) => ({ slug, title }))} newsletterVisible={homeSections.some(section => section.key === "newsletter" && section.visible)} />
           </CurrencyProvider>
         </div>
       </body>

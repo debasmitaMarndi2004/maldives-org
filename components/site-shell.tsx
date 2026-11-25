@@ -9,9 +9,11 @@ import { supportedCurrencies } from "@/lib/currency";
 import { useCurrency } from "@/components/currency-provider";
 import { HomeNavbar } from "@/components/home-navbar";
 import { legalPages } from "@/lib/legal-pages";
+import type { SiteContent } from "@/lib/site-content";
 
 export function Navbar() {
   const pathname = usePathname();
+  if (pathname === "/admin" || pathname.startsWith("/admin/")) return null;
   return pathname === "/" ? <HomeNavbar /> : <StandardNavbar />;
 }
 
@@ -22,7 +24,7 @@ function StandardNavbar() {
   const pathname = usePathname();
   const open = menuPath === pathname;
   const { currency, setCurrency, isLoading, isEstimated } = useCurrency();
-  const lightNav = pathname !== "/" && !pathname.startsWith("/partner") && !pathname.startsWith("/admin");
+  const lightNav = pathname !== "/" && !pathname.startsWith("/partner");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -58,18 +60,26 @@ function StandardNavbar() {
   );
 }
 
-export function Footer() {
+export function Footer({ copy, links, newsletterVisible, preview = false, previewRevision }: {
+  copy: SiteContent["footer"];
+  links: { slug: string; title: string }[];
+  newsletterVisible: boolean;
+  preview?: boolean;
+  previewRevision?: string;
+}) {
+  const pathname = usePathname();
+  if (!preview && (pathname === "/admin" || pathname.startsWith("/admin/"))) return null;
   return (
     <footer className="site-footer">
       <div className="page-wrap footer-grid">
-        <div><Link className="brand footer-brand" href="/">Maldives<span>.org</span></Link><p>Discover. Compare.<br />Book. Experience.</p></div>
+        <div><Link className="brand footer-brand" href="/">Maldives<span>.org</span></Link><p>{copy.firstLine}<br />{copy.secondLine}</p></div>
         <div><div className="footer-label">Explore</div><Link href="/stay">Resorts & stays</Link><Link href="/experiences">Experiences</Link><Link href="/guides">Travel guides</Link><Link href="/deals">Deals</Link><Link href="/how-it-works">How it works</Link></div>
-        <div><div className="footer-label">Maldives</div><Link href="/transfers">Transfers</Link><Link href="/atolls">Atolls & islands</Link><Link href="/about">About us</Link><Link href="/contact">Contact</Link></div>
+        <div><div className="footer-label">Maldives</div><Link href="/transfers">Transfers</Link><Link href="/atolls">Atolls & islands</Link><Link href="/about">About us</Link><Link href="/contact">Contact</Link>{links.map(({ slug, title }) => <Link key={slug} href={`${preview ? "/admin/preview" : "/pages"}/${slug}${previewRevision ? `?revision=${previewRevision}` : ""}`}>{title}</Link>)}</div>
         <nav aria-labelledby="footer-legal-title">
           <h2 className="footer-label" id="footer-legal-title">Legal</h2>
           {Object.values(legalPages).map(({ href, title }) => <Link key={href} href={href}>{title}</Link>)}
         </nav>
-        <div><div className="footer-label">Stay in the loop</div><p className="footer-small">Island notes, thoughtful stays and good reasons to go.</p><Link className="footer-arrow" href="/#newsletter">Join the newsletter <span aria-hidden="true">↗</span></Link></div>
+        <div><div className="footer-label">Stay in the loop</div><p className="footer-small">{copy.newsletter}</p>{newsletterVisible && <Link className="footer-arrow" href={preview ? "#newsletter" : "/#newsletter"}>Join the newsletter <span aria-hidden="true">↗</span></Link>}</div>
       </div>
       <div className="page-wrap footer-bottom">
         <span>© 2026 Maldives.org</span>
